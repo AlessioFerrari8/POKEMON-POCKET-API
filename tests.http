@@ -2,3 +2,8 @@ https://api.tcgdex.net/v2/en/cards
 
 ###
 https://api.tcgdex.net/v2/en/cards?name=pikachu
+
+###
+https://api.tcgdex.net/v2/en/series/tcgp
+
+   
