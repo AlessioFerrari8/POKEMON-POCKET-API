@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-cards',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './cards.html',
   styleUrl: './cards.css',
 })

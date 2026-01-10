@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-decks',
+  selector: 'app-expansion-detail',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './decks.html',
-  styleUrl: './decks.css',
+  templateUrl: './expansion-detail.html',
+  styleUrl: './expansion-detail.css',
 })
-export class Decks {
+
+export class ExpansionDetail {
 
 }

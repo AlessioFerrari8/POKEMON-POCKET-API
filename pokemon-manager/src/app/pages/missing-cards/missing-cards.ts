@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-missing-cards',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './missing-cards.html',
   styleUrl: './missing-cards.css',
 })
