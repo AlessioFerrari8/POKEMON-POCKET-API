@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import TCGdex from '@tcgdex/sdk';
-import { from, map, Observable, shareReplay, catchError, of } from 'rxjs';
+import { from, map, Observable, shareReplay, catchError, of, tap } from 'rxjs';
 import { Root } from '../components/interfaces/i-pokemon';
 
 @Injectable({
@@ -9,44 +9,62 @@ import { Root } from '../components/interfaces/i-pokemon';
 export class PokemonSDK {
   private tcgdex: TCGdex;
   
-  // Cache per evitare chiamate ripetute
-  private cardsCache$: Observable<Root[]> | null = null;
+  private pocketCardsCache$: Observable<Root[]> | null = null;
   
-  // Configurazione
   private readonly DEFAULT_RESULTS_LIMIT = 12;
+  private readonly POCKET_CATEGORY = 'Pokemon Pocket';
 
   constructor() {
     this.tcgdex = new TCGdex('en');
   }
 
   /**
-   * Recupera tutte le carte con caching automatico
+   * Recupera SOLO le carte di Pokémon Pocket
    */
-  getCards(): Observable<Root[]> {
-    // Se la cache esiste, riutilizzala
-    if (!this.cardsCache$) {
-      this.cardsCache$ = from(this.tcgdex.fetch('cards')).pipe(
+  getPocketCards(): Observable<Root[]> {
+    if (!this.pocketCardsCache$) {
+      this.pocketCardsCache$ = from(this.tcgdex.fetch('cards')).pipe(
+        tap((cards: any) => {
+          console.log('📦 Total cards fetched:', Array.isArray(cards) ? cards.length : 'NOT AN ARRAY');
+          
+          if (Array.isArray(cards) && cards.length > 0) {
+            console.log('🔍 First card structure:', cards[0]);
+            console.log('📋 Available categories:', [...new Set(cards.map((c: any) => c.category))]);
+            
+            const pocketCards = cards.filter((c: any) => c.category === this.POCKET_CATEGORY);
+            console.log(`✅ Found ${pocketCards.length} Pokémon Pocket cards`);
+            
+            if (pocketCards.length === 0) {
+              console.warn('⚠️ NO POCKET CARDS FOUND! Check if category name is correct.');
+              console.log('📝 Try these categories:', [...new Set(cards.map((c: any) => c.category))].slice(0, 5));
+            }
+          }
+        }),
         map((cards: unknown) => {
           if (!cards || !Array.isArray(cards)) {
             console.warn('Invalid cards data received');
             return [];
           }
-          return cards as Root[];
+          
+          // Filtra solo carte con category "Pokemon Pocket"
+          const pocketCards = (cards as Root[]).filter(card => 
+            card.category === this.POCKET_CATEGORY
+          );
+          
+          return pocketCards;
         }),
         catchError((error) => {
-          console.error('Error fetching cards:', error);
+          console.error('❌ Error fetching Pokémon Pocket cards:', error);
           return of([]);
         }),
-        shareReplay(1) // Cache il risultato per riutilizzarlo
+        shareReplay(1)
       );
     }
-    return this.cardsCache$;
+    return this.pocketCardsCache$;
   }
 
   /**
-   * Cerca carte per nome con limite configurabile
-   * @param query - Nome del Pokémon da cercare
-   * @param limit - Numero massimo di risultati (default: 12)
+   * Cerca carte per nome SOLO in Pokémon Pocket
    */
   searchCards(query: string, limit: number = this.DEFAULT_RESULTS_LIMIT): Observable<Root[]> {
     if (!query || query.trim().length === 0) {
@@ -54,41 +72,26 @@ export class PokemonSDK {
     }
 
     const normalizedQuery = query.trim().toLowerCase();
+    console.log(`🔎 Searching for: "${normalizedQuery}"`);
 
-    return this.getCards().pipe(
+    return this.getPocketCards().pipe(
+      tap(cards => console.log(`📊 Total Pocket cards available: ${cards.length}`)),
       map((cards: Root[]) => {
-        return cards
-          .filter((card) => 
-            card.name?.toLowerCase().includes(normalizedQuery)
-          )
-          .slice(0, limit);
+        const results = cards.filter((card) => {
+          const matches = card.name?.toLowerCase().includes(normalizedQuery);
+          if (matches) {
+            console.log(`✓ Match found: ${card.name} (${card.category})`);
+          }
+          return matches;
+        });
+        
+        console.log(`🎯 Search results for "${query}": ${results.length} cards`);
+        return results.slice(0, limit);
       })
     );
   }
 
-  /**
-   * Recupera una singola carta per ID
-   * @param id - ID della carta
-   */
-  getCard(id: string): Observable<Root | null> {
-    if (!id || id.trim().length === 0) {
-      console.warn('Invalid card ID provided');
-      return of(null);
-    }
-
-    return from(this.tcgdex.fetch('cards', id)).pipe(
-      map((card) => card as Root),
-      catchError((error) => {
-        console.error(`Error fetching card with ID ${id}:`, error);
-        return of(null);
-      })
-    );
-  }
-
-  /**
-   * Invalida la cache (utile se servono dati aggiornati)
-   */
   clearCache(): void {
-    this.cardsCache$ = null;
+    this.pocketCardsCache$ = null;
   }
 }

@@ -1,71 +1,100 @@
 <app-search-bar></app-search-bar>
 
 @if(!searchBar().hasSearched()) {
-    <div id="poster" class="relative w-full flex-grow flex items-center justify-center mt-64">
-        <div class="absolute z-30 transform hover:scale-110 transition-transform duration-300">
-            <img src="/cards_poster/mewto.png" alt="Pokemon Card" class="w-64 rounded-lg shadow-2xl">
-        </div>
-        <div class="absolute z-20 transform -rotate-12 -translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300">
-            <img src="/cards_poster/charizard.png" alt="Pokemon Card" class="w-60 rounded-lg shadow-xl opacity-90 hover:opacity-100">
-        </div>
-        <div class="absolute z-20 transform rotate-12 translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300">
-            <img src="/cards_poster/haunter.jpg" alt="Pokemon Card" class="w-60 rounded-lg shadow-xl opacity-90 hover:opacity-100">
-        </div>
-        <div class="absolute z-10 transform -rotate-20 -translate-x-80 hover:z-40 hover:scale-130 transition-all duration-300">
-            <img src="/cards_poster/pikachu.jpg" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-80 hover:opacity-100">
-        </div>
-        <div class="absolute z-10 transform rotate-20 translate-x-80 hover:z-40 hover:scale-125 transition-all duration-300">
-            <img src="/cards_poster/squirtle.webp" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-80 hover:opacity-100">
-        </div>
-        <div class="absolute z-0 transform translate-y-24 -translate-x-24 -rotate-30 scale-90 hover:z-40 hover:scale-150 transition-all duration-300">
-            <img src="/cards_poster/ivysaur.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-70 hover:opacity-100">
-        </div>
-        <div class="absolute z-0 transform translate-y-24 translate-x-24 rotate-30 scale-90 hover:z-40 hover:scale-150 transition-all duration-300">
-            <img src="/cards_poster/blaziken.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-70 hover:opacity-100">
-        </div>
+  <div id="poster" class="relative w-full flex-grow flex items-center justify-center mt-64">
+    <!-- Le tue card poster rimangono identiche -->
+    <div class="absolute z-30 transform hover:scale-110 transition-transform duration-300">
+      <img src="/cards_poster/mewto.png" alt="Pokemon Card" class="w-64 rounded-lg shadow-2xl">
     </div>
+    <div class="absolute z-20 transform -rotate-12 -translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300">
+      <img src="/cards_poster/charizard.png" alt="Pokemon Card" class="w-60 rounded-lg shadow-xl opacity-90 hover:opacity-100">
+    </div>
+    <div class="absolute z-20 transform rotate-12 translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300">
+      <img src="/cards_poster/haunter.jpg" alt="Pokemon Card" class="w-60 rounded-lg shadow-xl opacity-90 hover:opacity-100">
+    </div>
+    <div class="absolute z-10 transform -rotate-20 -translate-x-80 hover:z-40 hover:scale-130 transition-all duration-300">
+      <img src="/cards_poster/pikachu.jpg" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-80 hover:opacity-100">
+    </div>
+    <div class="absolute z-10 transform rotate-20 translate-x-80 hover:z-40 hover:scale-125 transition-all duration-300">
+      <img src="/cards_poster/squirtle.webp" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-80 hover:opacity-100">
+    </div>
+    <div class="absolute z-0 transform translate-y-24 -translate-x-24 -rotate-30 scale-90 hover:z-40 hover:scale-150 transition-all duration-300">
+      <img src="/cards_poster/ivysaur.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-70 hover:opacity-100">
+    </div>
+    <div class="absolute z-0 transform translate-y-24 translate-x-24 rotate-30 scale-90 hover:z-40 hover:scale-150 transition-all duration-300">
+      <img src="/cards_poster/blaziken.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-70 hover:opacity-100">
+    </div>
+  </div>
 } @else {
-    <div class="container mx-auto px-4 py-8">
-        @if(searchBar().searchResults().length > 0) {
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                @for (card of searchBar().searchResults(); track card.id) {
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
-                        <div class="relative pb-[140%] bg-gradient-to-br from-gray-100 to-gray-200">
-                            <img 
-                            [src]="card.image + '/high.webp'" 
-                            [alt]="card.name"
-                            (load)="onImageLoad(card)"
-                            (error)="onImageError(card)"
-                            class="..."
-                            >
-                        </div>
-                        <div class="p-4 bg-white">
-                            <h3 class="text-lg font-bold text-gray-800 truncate" [title]="card.name">{{ card.name }}</h3>
-                            <p class="text-xs text-gray-500">{{ card.set?.name }} - {{ card.localId }}</p>
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="text-sm text-gray-600">{{ card.rarity || 'Common' }}</span>
-                                @if(card.hp) {
-                                    <span class="text-sm font-semibold text-red-600">HP {{ card.hp }}</span>
-                                }
-                            </div>
-                            @if(card.types && card.types.length > 0) {
-                                <div class="flex gap-1 mt-2 flex-wrap">
-                                    @for(type of card.types; track type) {
-                                        <span class="px-2 py-1 text-xs rounded-full bg-gray-200 text-gray-700">
-                                            {{ type }}
-                                        </span>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
+  <div class="container mx-auto px-4 py-8">
+    @if(searchBar().isLoading()) {
+      <!-- Loading state -->
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    } @else if(searchBar().searchResults().length > 0) {
+      <!-- Results header -->
+      <div class="mb-6 text-center">
+        <h2 class="text-2xl font-bold text-gray-800">
+          Found {{ searchBar().searchResults().length }} Pokémon Pocket cards
+        </h2>
+      </div>
+
+      <!-- Results grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        @for (card of searchBar().searchResults(); track card.id) {
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group">
+            <div class="relative pb-[140%] bg-gradient-to-br from-gray-100 to-gray-200">
+              <img 
+                [src]="card.image + '/high.webp'" 
+                [alt]="card.name"
+                (load)="onImageLoad(card)"
+                (error)="onImageError(card)"
+                class="absolute inset-0 w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              >
+            </div>
+            <div class="p-4 bg-white">
+              <h3 class="text-lg font-bold text-gray-800 truncate" [title]="card.name">
+                {{ card.name }}
+              </h3>
+              <p class="text-xs text-gray-500 mt-1">
+                {{ card.set?.name }} - #{{ card.localId }}
+              </p>
+              <div class="flex items-center justify-between mt-2">
+                <span class="text-sm text-gray-600 capitalize">
+                  {{ card.rarity || 'Common' }}
+                </span>
+                @if(card.hp) {
+                  <span class="text-sm font-semibold text-red-600">
+                    HP {{ card.hp }}
+                  </span>
                 }
+              </div>
+              @if(card.types && card.types.length > 0) {
+                <div class="flex gap-1 mt-2 flex-wrap">
+                  @for(type of card.types; track type) {
+                    <span class="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 font-medium">
+                      {{ type }}
+                    </span>
+                  }
+                </div>
+              }
             </div>
-        } @else {
-            <div class="text-center py-20">
-                <p class="text-2xl text-gray-400">No Pokémon cards found</p>
-                <p class="text-gray-500 mt-2">Try searching for a different name</p>
-            </div>
+          </div>
         }
-    </div>
+      </div>
+    } @else {
+      <!-- No results -->
+      <div class="text-center py-20">
+        <div class="mb-4">
+          <svg class="w-24 h-24 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <p class="text-2xl font-semibold text-gray-400">No Pokémon Pocket cards found</p>
+        <p class="text-gray-500 mt-2">Try searching for a different Pokémon name</p>
+      </div>
+    }
+  </div>
 }
