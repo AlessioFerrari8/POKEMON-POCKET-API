@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal, WritableSignal, OnInit } from '@angular/core';
 import { PokemonSDK } from '../../services/pokemon-sdk';
 import { Root } from '../../components/interfaces/i-pokemon';
+import { SearchBar } from '../../components/search-bar/search-bar';
+
 
 @Component({
   selector: 'app-expansion-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SearchBar],
   templateUrl: './expansion-detail.html',
   styleUrl: './expansion-detail.css',
 })
