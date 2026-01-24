@@ -31,13 +31,18 @@ export class PokemonSDK {
     );
   }
 
-
-
   getSet(setId: string): Observable<any> {
     // https://api.tcgdex.net/v2/en/sets/A1
     const url = `https://api.tcgdex.net/v2/en/sets/${setId}`;
     return this.http.get<any>(url).pipe(
       catchError(() => of(null))
+    );
+  }
+
+  getMissingCard(setId: string, name: string): Observable<Root[]> {
+    const url = `https://api.tcgdex.net/v2/en/sets/${setId}/${name}`;
+    return this.http.get<Root[]>(url).pipe(
+      catchError(() => of([]))
     );
   }
 }
