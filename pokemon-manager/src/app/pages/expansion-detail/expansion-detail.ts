@@ -9,7 +9,7 @@ import { CardGridComponent } from '../../components/card-grid/card-grid';
 @Component({
   selector: 'app-expansion-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CardGridComponent],
   templateUrl: './expansion-detail.html',
   styleUrl: './expansion-detail.css',
 })
@@ -31,4 +31,30 @@ export class ExpansionDetail {
     { id: 'B1a', name: 'Crimson Blaze' },
   ];
 
+  selectedExpansion: WritableSignal<string | null> = signal(null);
+  cards: WritableSignal<Root[]> = signal([]);
+  isLoading: WritableSignal<boolean> = signal(false);
+
+  ExpansionClick(expansionId: string): void {
+    this.selectedExpansion.set(expansionId);
+    this.loadCards(expansionId);
+  }
+
+  private loadCards(expansionId: string): void {
+    this.isLoading.set(true);
+    this.service.getSet(expansionId).subscribe({
+      next: (data) => {
+        if (data && data.cards) {
+          this.cards.set(data.cards);
+        }
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading cards:', error);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
 }
+
