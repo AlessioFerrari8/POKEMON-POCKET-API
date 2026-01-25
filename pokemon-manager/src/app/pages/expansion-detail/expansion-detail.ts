@@ -3,13 +3,12 @@ import { Component, inject, signal, WritableSignal, OnInit } from '@angular/core
 import { PokemonSDK } from '../../services/pokemon-sdk';
 import { Root } from '../../components/interfaces/i-pokemon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CardGridComponent } from '../../components/card-grid/card-grid';
 
 
 @Component({
   selector: 'app-expansion-detail',
   standalone: true,
-  imports: [CommonModule, CardGridComponent],
+  imports: [CommonModule],
   templateUrl: './expansion-detail.html',
   styleUrl: './expansion-detail.css',
 })
