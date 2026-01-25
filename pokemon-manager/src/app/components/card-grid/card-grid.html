@@ -1,1 +1,27 @@
-<p>card-grid works!</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full">
+  @for (card of cards; track card.id) {
+    <div class="card-item group flex flex-col bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+      
+      <!-- Immagine  -->
+      <div class="relative w-full aspect-[260/360] bg-gradient-to-br from-[#f5f5f5] to-[#e0e0e0] flex items-center justify-center overflow-hidden">
+        <img 
+          [src]="card.image + '/high.webp'" 
+          [alt]="card.name"
+          class="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        >
+      </div>
+
+      <!-- Info Card -->
+      <div class="p-4 bg-white flex-grow flex flex-col">
+        <h3 class="text-[0.95rem] font-semibold text-[#333] m-0 mb-2 whitespace-nowrap overflow-hidden text-ellipsis" [title]="card.name">
+          {{ card.name }}
+        </h3>
+        <p class="text-[0.8rem] text-[#999] m-0">
+          #{{ card.localId }}
+        </p>
+      </div>
+
+    </div>
+  }
+</div>
