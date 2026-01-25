@@ -15,6 +15,7 @@ import { CardGridComponent } from '../../components/card-grid/card-grid';
 })
 export class ExpansionDetail {
   private service = inject(PokemonSDK);
+  private router = inject(Router);
 
   expansionSets = [
     { id: 'A1', name: 'Genetic Apex' },
@@ -38,6 +39,8 @@ export class ExpansionDetail {
   ExpansionClick(expansionId: string): void {
     this.selectedExpansion.set(expansionId);
     this.loadCards(expansionId);
+    // mostro ogni volta l'id 
+    this.router.navigate(['/expansion', expansionId]);
   }
 
   private loadCards(expansionId: string): void {
