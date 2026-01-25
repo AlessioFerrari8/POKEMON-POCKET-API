@@ -1,1 +1,21 @@
-<p>card-item works!</p>
+<div class="card-container flex flex-col bg-white rounded-[8px] shadow-[0_2px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] overflow-hidden transition-shadow duration-300 cursor-pointer">
+  
+  <div class="card-image-wrapper w-full aspect-[2.5/3.5] overflow-hidden bg-[#f0f0f0]">
+    <img 
+      [src]="card.image" 
+      [alt]="card.name" 
+      class="card-image w-full h-full object-cover"
+    >
+  </div>
+
+  <!-- Info Card (Testo Centrato) -->
+  <div class="card-info py-[8px] px-[12px] text-center">
+    <h3 class="card-name font-semibold text-[14px] text-[#333] m-0 mb-[4px] whitespace-nowrap overflow-hidden text-ellipsis">
+      {{ card.name }}
+    </h3>
+    <p class="card-number text-[12px] text-[#666] m-0">
+      #{{ card.localId }}
+    </p>
+  </div>
+
+</div>

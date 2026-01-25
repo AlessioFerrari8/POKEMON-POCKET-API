@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Root } from '../interfaces/i-pokemon';
 
 @Component({
   selector: 'app-card-item',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './card-item.html',
   styleUrl: './card-item.css',
 })
-export class CardItem {
-
+export class CardItemComponent {
+  @Input() card!: Root;
 }
