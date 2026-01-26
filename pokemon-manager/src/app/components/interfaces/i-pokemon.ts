@@ -1,4 +1,4 @@
-export interface Root {
+export interface IPokemon {
   category: string
   id: string
   illustrator: string

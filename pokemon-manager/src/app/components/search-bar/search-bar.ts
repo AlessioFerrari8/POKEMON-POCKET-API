@@ -1,7 +1,7 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PokemonSDK } from '../../services/pokemon-sdk';
-import { Root } from '../interfaces/i-pokemon';
+import { IPokemon } from '../interfaces/i-pokemon';
 
 @Component({
   selector: 'app-search-bar',
@@ -13,7 +13,7 @@ import { Root } from '../interfaces/i-pokemon';
 export class SearchBar {
   private service = inject(PokemonSDK);
 
-  public searchResults: WritableSignal<Root[]> = signal([]);
+  public searchResults: WritableSignal<IPokemon[]> = signal([]);
   public isLoading: WritableSignal<boolean> = signal(false);
   public errorMessage: WritableSignal<string> = signal('');
 

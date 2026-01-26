@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Root } from '../interfaces/i-pokemon';
+import { IPokemon } from '../interfaces/i-pokemon';
 
 @Component({
   selector: 'app-card-item',
@@ -10,5 +10,5 @@ import { Root } from '../interfaces/i-pokemon';
   styleUrl: './card-item.css',
 })
 export class CardItemComponent {
-  @Input() card!: Root;
+  @Input() card!: IPokemon;
 }

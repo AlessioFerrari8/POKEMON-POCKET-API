@@ -1,7 +1,7 @@
 import { Component, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../components/search-bar/search-bar';
-import { Root } from '../../components/interfaces/i-pokemon';
+import { IPokemon } from '../../components/interfaces/i-pokemon';
 import { computed } from '@angular/core';
 
 @Component({
@@ -18,7 +18,7 @@ export class Cards {
     const searchBar = this.searchBarComponent();
     if (!searchBar) return [];
     const results = searchBar.searchResults();
-    return results.filter((card: Root) => card.image);
+    return results.filter((card: IPokemon) => card.image);
   });
 
   hasSearched = computed(() => {

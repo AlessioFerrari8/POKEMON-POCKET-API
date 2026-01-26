@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal, WritableSignal, OnInit } from '@angular/core';
 import { PokemonSDK } from '../../services/pokemon-sdk';
-import { Root } from '../../components/interfaces/i-pokemon';
+import { IPokemon } from '../../components/interfaces/i-pokemon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardGridComponent } from '../../components/card-grid/card-grid';
 
@@ -33,7 +33,7 @@ export class ExpansionDetail {
   ];
 
   selectedExpansion: WritableSignal<string | null> = signal(null);
-  cards: WritableSignal<Root[]> = signal([]);
+  cards: WritableSignal<IPokemon[]> = signal([]);
   isLoading: WritableSignal<boolean> = signal(false);
 
   ExpansionClick(expansionId: string): void {
