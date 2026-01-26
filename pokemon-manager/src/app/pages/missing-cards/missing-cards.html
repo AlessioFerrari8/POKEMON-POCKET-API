@@ -1,0 +1,68 @@
+<div class="mt-4">
+  <form 
+    class="flex items-center max-w-2xl mx-auto gap-2" 
+    (submit)="$event.preventDefault(); performSearch()"
+  >   
+    <!-- Dropdown Filter -->
+    <div class="relative">
+      <button
+        type="button"
+        (click)="toggleDropdown()"
+        class="px-4 py-2.5 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 transition-all flex items-center gap-2"
+      >
+        {{ getCurrentFilterLabel() }}
+        <svg class="w-4 h-4 transition-transform" [class.rotate-180]="isDropdownOpen()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </button>
+
+      <!-- Dropdown Menu -->
+      @if (isDropdownOpen()) {
+        <div class="absolute top-full mt-1 left-0 bg-white border border-gray-300 rounded-lg shadow-lg z-10 min-w-48">
+          @for (option of filterOptions; track option.value) {
+            <button
+              type="button"
+              (click)="selectFilter(option.value)"
+              [class.bg-blue-100]="filterType.value === option.value"
+              class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors first:rounded-t-lg last:rounded-b-lg"
+            >
+              {{ option.label }}
+              @if (filterType.value === option.value) {
+                <svg class="w-4 h-4 float-right mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Search Input -->
+    <label for="missing-search" class="sr-only">Search missing cards</label>
+    <div class="relative flex-1">
+      <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+        <img src="/pokemon_search_bar.svg" class="w-4 h-4 text-gray-500" alt="Search Icon" />
+      </div>
+
+      <input 
+        type="text" 
+        id="missing-search" 
+        class="bg-gray-200 border-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" 
+        placeholder="Search cards..." 
+        [formControl]="searchQuery"
+      />
+    </div>
+
+    <!-- Search Button -->
+    <button 
+      type="submit" 
+      class="p-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 transition-all"
+    >
+      <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+      </svg>
+      <span class="sr-only">Search</span>
+    </button>
+  </form>
+</div>
