@@ -65,4 +65,26 @@
       <span class="sr-only">Search</span>
     </button>
   </form>
+
+  <!-- Error Message -->
+  @if (errorMessage()) {
+    <p class="text-red-500 text-sm mt-4 text-center animate-pulse">
+      {{ errorMessage() }}
+    </p>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <p class="text-gray-500 text-sm mt-4 text-center">
+      Loading cards...
+    </p>
+  }
+
+  <!-- Cards Grid -->
+  @if (cards().length > 0 && !isLoading()) {
+    <div class="mt-8">
+      <p class="text-gray-600 text-sm mb-4 text-center">Found {{ cards().length }} cards</p>
+      <app-card-grid [cards]="cards()"></app-card-grid>
+    </div>
+  }
 </div>

@@ -1,18 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { PokemonSDK } from '../../services/pokemon-sdk';
+import { IPokemon } from '../../components/interfaces/i-pokemon';
+import { CardGridComponent } from '../../components/card-grid/card-grid';
 
 @Component({
   selector: 'app-missing-cards',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CardGridComponent],
   templateUrl: './missing-cards.html',
   styleUrl: './missing-cards.css',
 })
 export class MissingCards {
+  private service = inject(PokemonSDK);
+
   filterType = new FormControl<string>('all', { nonNullable: true });
   searchQuery = new FormControl<string>('', { nonNullable: true });
   isDropdownOpen: WritableSignal<boolean> = signal(false);
+  cards: WritableSignal<IPokemon[]> = signal([]);
+  isLoading: WritableSignal<boolean> = signal(false);
+  errorMessage: WritableSignal<string> = signal('');
 
   filterOptions = [
     { value: 'all', label: 'All Expansions' },
@@ -46,10 +54,50 @@ export class MissingCards {
 
   performSearch(): void {
     const query = this.searchQuery.value.trim();
-    console.log('Searching for:', query, 'with filter:', this.filterType.value);
-    // Aggiungere logica di ricerca qui
-    
+    const selectedExpansion = this.filterType.value;
+
+    if (selectedExpansion === 'all' && !query) {
+      this.cards.set([]);
+      this.errorMessage.set('Please select an expansion or search for a card');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    if (selectedExpansion && selectedExpansion !== 'all') {
+      // Carica tutte le carte dell'espansione
+      this.service.getSet(selectedExpansion).subscribe({
+        next: (data) => {
+          if (data && data.cards) {
+            let filteredCards = data.cards;
+            
+            // Se c'è una query di ricerca, filtra le carte
+            if (query) {
+              filteredCards = filteredCards.filter((card: IPokemon) =>
+                card.name?.toLowerCase().includes(query.toLowerCase())
+              );
+            }
+            
+            this.cards.set(filteredCards);
+            this.isLoading.set(false);
+            
+            if (filteredCards.length === 0) {
+              this.errorMessage.set(`No cards found for "${query}" in ${this.getCurrentFilterLabel()}`);
+            }
+          } else {
+            this.cards.set([]);
+            this.errorMessage.set('Failed to load expansion data');
+            this.isLoading.set(false);
+          }
+        },
+        error: (err) => {
+          console.error('Error loading expansion:', err);
+          this.cards.set([]);
+          this.errorMessage.set('Error loading expansion. Try again.');
+          this.isLoading.set(false);
+        }
+      });
+    }
   }
-
-
 }
