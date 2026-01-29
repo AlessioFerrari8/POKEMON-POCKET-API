@@ -1,1 +1,52 @@
-<p>home works!</p>
+<div class="min-h-screen bg-[#0f172a]">
+    <div class="mt-4 flex flex-col items-center justify-center">
+        <h1 class="text-4xl font-bold text-[#f8fafc]">Manage your Pokémon TCG Pocket collection</h1>
+        <p class="text-xl text-[#cbd5f5] mt-3">Track cards, expansions, decks and missing cards in one place.</p>
+    </div>
+    <div class="mt-8 flex flex-col items-center justify-center">
+        <h2 class="text-5xl md:text-6xl font-bold text-[#f8fafc] text-center">What can you do?</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 p-5">
+        <div class="flex flex-col bg-[#1e293b] rounded-lg overflow-hidden opacity-0 transform translate-y-4 transition-all duration-700" appScrollAnimate>
+            <div class="aspect-square flex flex-col items-center justify-center py-6 px-4">
+                <img src="cards_poster/mewto.png" alt="Mewtwo" class="max-w-full max-h-full object-contain rounded-lg">
+            </div>
+            <div class="px-4 py-3 border-t border-[#0f172a]">
+                <p class="text-[#cbd5f5] text-xs sm:text-sm md:text-base lg:text-lg font-semibold mb-1">Search for cards</p>
+                <p class="text-[#94a3b8] text-xs sm:text-sm">Browse and manage all Pokémon TCG Pocket cards. <br> Add cards you don't possess to missing-cards for finding, trading, and sharing them.</p>
+            </div>
+        </div>
+        <div class="flex flex-col bg-[#1e293b] rounded-lg overflow-hidden opacity-0 transform translate-y-4 transition-all duration-700" appScrollAnimate>
+            <div class="aspect-square flex flex-col items-center justify-center py-6 px-4">
+                <img src="home/friends.webp" alt="friends" class="max-w-full max-h-full object-contain rounded-lg">
+            </div>
+            <div class="px-4 py-3 border-t border-[#0f172a]">
+                <p class="text-[#cbd5f5] text-xs sm:text-sm md:text-base lg:text-lg font-semibold mb-1">Make new friends</p>
+                <p class="text-[#94a3b8] text-xs sm:text-sm">Connect with other collectors in the community. <br> 
+                Share id, trade cards with agreement, chat with others.</p>
+            </div>
+        </div>
+        <div class="flex flex-col bg-[#1e293b] rounded-lg overflow-hidden opacity-0 transform translate-y-4 transition-all duration-700" appScrollAnimate>
+            <div class="aspect-square flex flex-col items-center justify-center py-6 px-4">
+                <img src="home/decks.webp" alt="decks" class="max-w-full max-h-full object-contain rounded-lg">
+            </div>
+            <div class="px-4 py-3 border-t border-[#0f172a]">
+                <p class="text-[#cbd5f5] text-xs sm:text-sm md:text-base lg:text-lg font-semibold mb-1">Build decks</p>
+                <p class="text-[#94a3b8] text-xs sm:text-sm">Create powerful decks and discover trending strategies. <br> Share your own decks, rate them, and advise other users.</p>
+            </div>
+        </div>
+        <div class="flex flex-col bg-[#1e293b] rounded-lg overflow-hidden opacity-0 transform translate-y-4 transition-all duration-700" appScrollAnimate>
+            <div class="aspect-square flex flex-col items-center justify-center py-6 px-4">
+                <img src="home/trade.webp" alt="trade" class="max-w-full max-h-full object-contain rounded-lg">
+            </div>
+            <div class="px-4 py-3 border-t border-[#0f172a]">
+                <p class="text-[#cbd5f5] text-xs sm:text-sm md:text-base lg:text-lg font-semibold mb-1">Trade cards</p>
+                <p class="text-[#94a3b8] text-xs sm:text-sm">Exchange cards with other players to complete your collection.</p>
+            </div>
+        </div>
+    </div>
+    <div class="discover-cards">
+        <h1 class="text-4xl font-bold text-[#f8fafc] text-center">Discover cards</h1>
+    </div>
+</div>
+<!-- todo: far ereditare stile navbar dal componente -->
