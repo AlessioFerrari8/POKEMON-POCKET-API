@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, signal, viewChild, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { IPokemon } from '../../components/interfaces/i-pokemon';
@@ -13,7 +13,16 @@ import { computed } from '@angular/core';
 })
 export class Cards {
   searchBarComponent = viewChild(SearchBar);
-  
+  selectedCardIndex: WritableSignal<number | null> = signal(null);
+
+  /**
+   * Metodo per hover sulle carte, cosi rimangono in primo piano
+   * @param index 
+   */
+  onCardHover(index: number) {
+    this.selectedCardIndex.set(index);
+  }
+
   cardsWithImages = computed(() => {
     const searchBar = this.searchBarComponent();
     if (!searchBar) return [];
