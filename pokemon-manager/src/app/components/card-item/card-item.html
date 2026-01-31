@@ -14,7 +14,10 @@
       {{ card.name }}
     </h3>
     <p class="card-number text-[12px] text-[#666] m-0">
-      #{{ card.localId }}
+      #{{ card.localId }} : {{ card.set.name }}
+    </p>
+    <p class="card-number text-[12px] text-[#666] m-0">
+      {{ card.pricing.cardmarket }} 
     </p>
   </div>
 
