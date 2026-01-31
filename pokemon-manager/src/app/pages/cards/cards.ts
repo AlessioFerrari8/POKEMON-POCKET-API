@@ -1,12 +1,13 @@
 import { Component, signal, viewChild, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../components/search-bar/search-bar';
+import { CardGridComponent } from '../../components/card-grid/card-grid';
 import { IPokemon } from '../../components/interfaces/i-pokemon';
 import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-cards',
-  imports: [CommonModule, SearchBar],
+  imports: [CommonModule, SearchBar, CardGridComponent],
   templateUrl: './cards.html',
   styleUrl: './cards.css',
   standalone: true

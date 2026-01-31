@@ -1,6 +1,7 @@
 <app-search-bar></app-search-bar>
 
 @if(!hasSearched() || cardsWithImages().length === 0) {
+  <!-- PARTE POSTER -->
   <div id="poster" class="relative w-full flex-grow flex items-center justify-center mt-64">
     <div 
       (mouseenter)="onCardHover(0)"
@@ -24,56 +25,35 @@
       (mouseenter)="onCardHover(3)"
       [class.z-50]="selectedCardIndex() === 3"
       class="absolute z-10 transform -rotate-20 -translate-x-80 hover:z-40 hover:scale-130 transition-all duration-300">
-      <img src="/cards_poster/pikachu.jpg" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-90 hover:opacity-100">
+      <img src="/cards_poster/pikachu.jpg" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-95 hover:opacity-100">
     </div>
     <div 
       (mouseenter)="onCardHover(4)"
       [class.z-50]="selectedCardIndex() === 4"
       class="absolute z-10 transform rotate-20 translate-x-80 hover:z-40 hover:scale-125 transition-all duration-300">
-      <img src="/cards_poster/squirtle.webp" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-90 hover:opacity-100">
+      <img src="/cards_poster/squirtle.webp" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-95 hover:opacity-100">
     </div>
     <div 
       (mouseenter)="onCardHover(5)"
       [class.z-50]="selectedCardIndex() === 5"
-      class="absolute z-0 transform translate-y-24 -translate-x-24 -rotate-30 scale-90 hover:z-40 hover:scale-150 transition-all duration-300">
-      <img src="/cards_poster/ivysaur.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-80 hover:opacity-100">
+      class="absolute z-0 transform rotate-28 translate-x-112 hover:z-40 hover:scale-150 transition-all duration-300">
+      <img src="/cards_poster/ivysaur.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-90 hover:opacity-100">
     </div>
     <div 
       (mouseenter)="onCardHover(6)"
       [class.z-50]="selectedCardIndex() === 6"
-      class="absolute z-0 transform translate-y-24 translate-x-24 rotate-30 scale-90 hover:z-40 hover:scale-150 transition-all duration-300">
-      <img src="/cards_poster/blaziken.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-80 hover:opacity-100">
+      class="absolute z-0 transform -rotate-28 -translate-x-112 hover:z-40 hover:scale-150 transition-all duration-300">
+      <img src="/cards_poster/blaziken.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-90 hover:opacity-100">
     </div>
   </div>
+  <!-- FINE PARTE POSTER -->
 } @else {
-  <div class="container mx-auto px-4 py-8">
-    <!-- Results grid -->
+  <div class="container mx-auto px-4 py-8 flex-grow">
     <div class="mb-6 text-center">
       <h2 class="text-2xl font-bold text-gray-800">
         Found {{ cardsWithImages().length }} Pokémon Pocket cards
       </h2>
     </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-      @for (card of cardsWithImages(); track card.id) {
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group">
-          <div class="relative pb-[140%] bg-gradient-to-br from-gray-100 to-gray-200">
-            <img 
-              [src]="card.image + '/high.webp'" 
-              [alt]="card.name"
-              width="260"
-              height="360"
-              class="absolute inset-0 w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-              loading="lazy"
-            >
-          </div>
-          <div class="p-4 bg-white">
-            <h3 class="text-lg font-bold text-gray-800 truncate" [title]="card.name">
-              {{ card.name }}
-            </h3>
-          </div>
-        </div>
-      }
-    </div>
+    <app-card-grid [cards]="cardsWithImages()"></app-card-grid>
   </div>
 }
