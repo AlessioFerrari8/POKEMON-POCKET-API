@@ -4,7 +4,7 @@ https://api.tcgdex.net/v2/en/cards
 https://api.tcgdex.net/v2/en/cards?name=pikachu
 
 ###
-https://api.tcgdex.net/v2/en/series/tcgp
+https://api.tcgdex.net/v2/en/series
 
 ###
 https://api.tcgdex.net/v2/en/cards/np-35
@@ -17,4 +17,7 @@ https://api.tcgdex.net/v2/en/series/tcgp/
 
 ###
 https://api.tcgdex.net/v2/en/sets/
+
+###
+https://api.tcgdex.net/v2/en/cards?name=pikachu
 
