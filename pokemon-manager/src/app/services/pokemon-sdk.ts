@@ -15,11 +15,11 @@ export class PokemonSDK {
     this.tcgdex = new TCGdex('en');
   }
 
-  searchCards(name: string, series: string = 'tcgp'): Observable<IPokemon[]> {
+  searchCards(name: string): Observable<IPokemon[]> {
     // https://api.tcgdex.net/v2/en/cards?name=pikachu
     const url = `https://api.tcgdex.net/v2/en/cards?name=${name}`;
     return this.http.get<IPokemon[]>(url).pipe(
-      map(cards => cards.filter(card => card.set.id === series)),
+      map(cards => cards.filter(card => card.image && card.image.includes('/tcgp/'))),
       catchError(() => of([]))
     );
   }
