@@ -1,79 +1,87 @@
-<!-- Modal per i dettagli della carta -->
-@if(selectedCard()) {
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
-    <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
-        <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-      </div>
-      @if(isLoadingDetails()) {
-        <p class="text-gray-500 text-center">Loading details...</p>
-      } @else {
-        <app-card-item [card]="selectedCard()!"></app-card-item>
-      }
-    </div>
-  </div>
-}
-
-@if(!selectedExpansion()) {
-  <div class="flex justify-center mt-4 mr-4 ml-4 mb-4">
-    <div class="grid grid-cols-3 gap-6 lg:grid-cols-4">
-      @for(expansion of expansionSets; track expansion.id) {
-        <div
-          class="abosulute z-10 p-6 bg-white rounded-xl shadow-lg border border-gray-200 cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all"
-          (click)="ExpansionClick(expansion.id)"
-        >
-          <h3 class="text-xl font-semibold text-gray-900">{{ expansion.name }}</h3>
-          <p class="text-gray-500">{{ expansion.id }}</p>
+<div>
+  <!-- dettagli carta -->
+  @if(selectedCard()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
+      <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
+          <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
         </div>
+        @if(isLoadingDetails()) {
+          <p class="text-gray-500 text-center">Loading details...</p>
+        } @else {
+          <app-card-item [card]="selectedCard()!"></app-card-item>
+        }
+      </div>
+    </div>
+  }
+  
+  @if(!selectedExpansion()) {
+    <div class="flex justify-center mt-4 mr-4 ml-4 mb-4">
+      <div class="grid grid-cols-3 gap-6 lg:grid-cols-4">
+        @for(expansion of expansionSets; track expansion.id) {
+          <div
+            class="abosulute z-10 p-6 bg-white rounded-xl shadow-lg border border-gray-200 cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all"
+            (click)="ExpansionClick(expansion.id)"
+          >
+            <h3 class="text-xl font-semibold text-gray-900">{{ expansion.name }}</h3>
+            <p class="text-gray-500">{{ expansion.id }}</p>
+          </div>
+        }
+      </div>
+    </div>
+    <div id="collage" class="relative w-full flex-grow flex items-center justify-center mt-64 ">
+      <div class="absolute z-0 transform translate-y-24 -translate-x-214 -rotate-30 scale-160">
+        <img src="/collage/mythicalIsland.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
+      </div>
+      <div class="absolute z-0 transform translate-y-24 -translate-x-119 -rotate-30 scale-160">
+        <img src="/collage/secludedSprings.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
+      </div>
+      <div class="absolute z-0 transform translate-y-24 -translate-x-24 -rotate-30 scale-160">
+        <img src="/collage/geneticApex.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
+      </div>
+      <div class="absolute z-0 transform translate-y-24 translate-x-71 -rotate-30 scale-160">
+        <img src="/collage/megaRising.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
+      </div>
+      <div class="absolute z-0 transform translate-y-24 translate-x-166 -rotate-30 scale-160">
+        <img src="/collage/windsdomOfSky.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
+      </div>
+      <div class="absolute z-0 transform translate-y-24 translate-x-261 -rotate-30 scale-160">
+        <img src="/collage/CelestailGuardians.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-30">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 translate-x-86 -rotate-30 scale-160">
+        <img src="/collage/secludedSprings.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 translate-x-275 -rotate-30 scale-160">
+        <img src="/collage/megaRising.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 translate-x-181 -rotate-30 scale-160">
+        <img src="/collage/mythicalIsland.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 -translate-x-9 -rotate-30 scale-160">
+        <img src="/collage/windsdomOfSky.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 -translate-x-104 -rotate-30 scale-160">
+        <img src="/collage/megaRising.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 -translate-x-199 -rotate-30 scale-160">
+        <img src="/collage/CelestailGuardians.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+      <div class="absolute z-0 transform -translate-y-115 -translate-x-294 -rotate-30 scale-160">
+        <img src="/collage/geneticApex.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
+      </div>
+    </div>
+  
+  } @else {
+    <div class="mt-8 mx-4 flex flex-col items-center">
+      <button type="button" (click)="selectedExpansion.set(null)" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        Get Back
+      </button>
+      @if(isLoading()) {
+        <p class="text-center text-gray-500">Loading cards...</p>
+      } @else {
+        <app-card-grid [cards]="cards()" (cardClicked)="onCardClicked($event)"></app-card-grid>
       }
     </div>
-  </div>
-  <div id="collage" class="relative w-full  flex-grow flex items-center justify-center mt-64">
-    <div class="absolute z-0 transform translate-y-24 -translate-x-214 -rotate-30 scale-160">
-      <img src="/collage/mythicalIsland.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
-    </div>
-    <div class="absolute z-0 transform translate-y-24 -translate-x-119 -rotate-30 scale-160">
-      <img src="/collage/secludedSprings.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
-    </div>
-    <div class="absolute z-0 transform translate-y-24 -translate-x-24 -rotate-30 scale-160">
-      <img src="/collage/geneticApex.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
-    </div>
-    <div class="absolute z-0 transform translate-y-24 translate-x-71 -rotate-30 scale-160">
-      <img src="/collage/megaRising.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
-    </div>
-    <div class="absolute z-0 transform translate-y-24 translate-x-166 -rotate-30 scale-160">
-      <img src="/collage/windsdomOfSky.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
-    </div>
-    <div class="absolute z-0 transform translate-y-24 translate-x-261 -rotate-30 scale-160">
-      <img src="/collage/CelestailGuardians.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-30">
-    </div>
-    <div class="absolute z-0 transform -translate-y-115 translate-x-86 -rotate-30 scale-160">
-      <img src="/collage/secludedSprings.jpg" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
-    </div>
-    <div class="absolute z-0 transform -translate-y-115 translate-x-181 -rotate-30 scale-160">
-      <img src="/collage/mythicalIsland.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
-    </div>
-    <div class="absolute z-0 transform -translate-y-115 -translate-x-9 -rotate-30 scale-160">
-      <img src="/collage/windsdomOfSky.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
-    </div>
-    <div class="absolute z-0 transform -translate-y-115 -translate-x-104 -rotate-30 scale-160">
-      <img src="/collage/megaRising.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
-    </div>
-    <div class="absolute z-0 transform -translate-y-115 -translate-x-199 -rotate-30 scale-160">
-      <img src="/collage/CelestailGuardians.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-20">
-    </div>
-  </div>
-
-} @else {
-  <div class="mt-8 mx-4 flex flex-col items-center">
-    <button type="button" (click)="selectedExpansion.set(null)" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-      Get Back
-    </button>
-    @if(isLoading()) {
-      <p class="text-center text-gray-500">Loading cards...</p>
-    } @else {
-      <app-card-grid [cards]="cards()" (cardClicked)="onCardClicked($event)"></app-card-grid>
-    }
-  </div>
-}
+  }
+</div>
