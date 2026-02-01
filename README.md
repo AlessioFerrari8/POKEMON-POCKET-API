@@ -10,3 +10,9 @@ Api for cards
 Api for decks
 
 https://docs.limitlesstcg.com/developer.html 
+
+# TODO:
+- [ ] remove all expansions in missing cards
+- [ ] user
+- [ ] button for adding cards in missing cards 
+- [ ] missing cards in missing cards
