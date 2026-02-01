@@ -1,5 +1,22 @@
 <app-search-bar></app-search-bar>
 
+<!-- Modal per i dettagli della carta -->
+@if(selectedCard()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
+        <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+      </div>
+      @if(isLoadingDetails()) {
+        <p class="text-gray-500 text-center">Loading details...</p>
+      } @else {
+        <app-card-item [card]="selectedCard()!"></app-card-item>
+      }
+    </div>
+  </div>
+}
+
 @if(!hasSearched() || cardsWithImages().length === 0) {
   <!-- PARTE POSTER -->
   <div id="poster" class="relative w-full flex-grow flex items-center justify-center mt-64">
@@ -61,6 +78,6 @@
     <div class="mb-6 text-center">
       <p class="text-gray-600 text-sm mb-4 text-center">Found {{ cardsWithImages().length }} cards</p>
     </div>
-    <app-card-grid [cards]="cardsWithImages()"></app-card-grid>
+    <app-card-grid [cards]="cardsWithImages()" (cardClicked)="onCardClicked($event)"></app-card-grid>
   </div>
 }
