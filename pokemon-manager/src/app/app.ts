@@ -19,4 +19,8 @@ export class App {
   isHome(): boolean {
     return this.router.url === '/' || this.router.url === '/home';
   }
+
+  isCards(): boolean {
+    return this.router.url === '/cards';
+  }
 }
