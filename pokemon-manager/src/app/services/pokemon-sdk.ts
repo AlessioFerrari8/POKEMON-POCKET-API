@@ -45,4 +45,14 @@ export class PokemonSDK {
       catchError(() => of([]))
     );
   }
+
+  getPokemonDetails(id: string, imageUrl: string): Observable<IPokemon> {
+    const parts = imageUrl.split('/');
+    const setId = parts[parts.length - 2]; // Estrae il set ID (penultima parte del path)
+    const cardId = parts[parts.length - 1]; // Estrae l'ID della carta (ultima parte del path)
+    const url = `https://api.tcgdex.net/v2/en/sets/${setId}/${cardId}`;
+    return this.http.get<any>(url).pipe(
+      catchError(() => of())
+    );
+  }
 }
