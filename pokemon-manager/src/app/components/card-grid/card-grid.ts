@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IPokemon } from '../interfaces/i-pokemon';
 
@@ -11,4 +11,9 @@ import { IPokemon } from '../interfaces/i-pokemon';
 })
 export class CardGridComponent {
   @Input() cards: IPokemon[] = [];
+  @Output() cardClicked = new EventEmitter<IPokemon>();
+
+  onCardClick(card: IPokemon): void {
+    this.cardClicked.emit(card);
+  }
 }
