@@ -23,4 +23,8 @@ export class App {
   isCards(): boolean {
     return this.router.url === '/cards';
   }
+
+  isMissingCards(): boolean {
+    return this.router.url === '/missing-cards';
+  }
 }
