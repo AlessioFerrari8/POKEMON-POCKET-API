@@ -4,11 +4,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PokemonSDK } from '../../services/pokemon-sdk';
 import { IPokemon } from '../../components/interfaces/i-pokemon';
 import { CardGridComponent } from '../../components/card-grid/card-grid';
+import { CardItemComponent } from '../../components/card-item/card-item';
 
 @Component({
   selector: 'app-missing-cards',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CardGridComponent],
+  imports: [CommonModule, ReactiveFormsModule, CardGridComponent, CardItemComponent],
   templateUrl: './missing-cards.html',
   styleUrl: './missing-cards.css',
 })
@@ -21,6 +22,8 @@ export class MissingCards {
   cards: WritableSignal<IPokemon[]> = signal([]);
   isLoading: WritableSignal<boolean> = signal(false);
   errorMessage: WritableSignal<string> = signal('');
+  selectedCard: WritableSignal<IPokemon | null> = signal(null);
+  isLoadingDetails: WritableSignal<boolean> = signal(false);
 
   filterOptions = [
     { value: 'all', label: 'All Expansions' },
@@ -99,5 +102,27 @@ export class MissingCards {
         }
       });
     }
+  }
+
+  onCardClicked(card: IPokemon): void {
+    this.selectedCard.set(card);
+    this.isLoadingDetails.set(true);
+    
+    this.service.getPokemonDetails(card.id, card.image).subscribe({
+      next: (details) => {
+        if (details && Object.keys(details).length > 0) {
+          this.selectedCard.set(details);
+        }
+        this.isLoadingDetails.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading card details:', err);
+        this.isLoadingDetails.set(false);
+      }
+    });
+  }
+
+  closeCardDetail(): void {
+    this.selectedCard.set(null);
   }
 }

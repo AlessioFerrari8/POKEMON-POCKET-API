@@ -1,3 +1,20 @@
+<!-- Modal per i dettagli della carta -->
+@if(selectedCard()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
+        <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+      </div>
+      @if(isLoadingDetails()) {
+        <p class="text-gray-500 text-center">Loading details...</p>
+      } @else {
+        <app-card-item [card]="selectedCard()!"></app-card-item>
+      }
+    </div>
+  </div>
+}
+
 @if(!selectedExpansion()) {
   <div class="flex justify-center mt-4 mr-4 ml-4 mb-4">
     <div class="grid grid-cols-3 gap-6 lg:grid-cols-4">
@@ -56,7 +73,7 @@
     @if(isLoading()) {
       <p class="text-center text-gray-500">Loading cards...</p>
     } @else {
-      <app-card-grid [cards]="cards()"></app-card-grid>
+      <app-card-grid [cards]="cards()" (cardClicked)="onCardClicked($event)"></app-card-grid>
     }
   </div>
 }
