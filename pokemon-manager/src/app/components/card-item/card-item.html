@@ -2,23 +2,46 @@
   
   <div class="card-image-wrapper w-full aspect-[2.5/3.5] overflow-hidden bg-[#f0f0f0]">
     <img 
-      [src]="card.image" 
+      [src]="card.image + '/high.webp'" 
       [alt]="card.name" 
-      class="card-image w-full h-full object-cover"
+      class="card-image w-full h-full object-contain"
     >
   </div>
 
   <!-- Info Card (Testo Centrato) -->
-  <div class="card-info py-[8px] px-[12px] text-center">
-    <h3 class="card-name font-semibold text-[14px] text-[#333] m-0 mb-[4px] whitespace-nowrap overflow-hidden text-ellipsis">
-      {{ card.name }}
-    </h3>
-    <p class="card-number text-[12px] text-[#666] m-0">
-      #{{ card.localId }} : {{ card.set.name }}
-    </p>
-    <p class="card-number text-[12px] text-[#666] m-0">
-      {{ card.pricing.cardmarket }} 
-    </p>
+  <div class="card-info py-[12px] px-[14px] text-center bg-gradient-to-b from-white to-[#f8f9fa] flex-grow flex flex-col justify-between">
+    <div>
+      <h3 class="card-name font-bold text-[15px] text-[#1a202c] m-0 mb-[8px] whitespace-nowrap overflow-hidden text-ellipsis">
+        {{ card.name }}
+      </h3>
+      <div class="flex items-center justify-center gap-2 mb-[8px]">
+        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-[11px] font-semibold rounded-full">
+          #{{ card.localId }}
+        </span>
+        <span class="text-[12px] text-[#718096] font-medium">{{ card.set.name }}</span>
+      </div>
+      <div class="border-t border-[#e2e8f0] pt-[8px] mt-[8px]">
+        <div class="flex justify-around text-[11px] mb-[6px]">
+          <div class="flex flex-col">
+            <span class="text-[#718096] font-semibold">HP</span>
+            <span class="text-[#2d3748] font-bold">{{ card.hp }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[#718096] font-semibold">Type</span>
+            <span class="text-[#2d3748] font-bold text-[10px]">{{ card.types?.[0] || '-' }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[#718096] font-semibold">Stage</span>
+            <span class="text-[#2d3748] font-bold">{{ card.stage || '-' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-[#e2e8f0] pt-[8px] mt-[8px]">
+      <p class="text-[10px] text-[#718096] m-0 italic">
+        Illustrated by {{ card.illustrator }}
+      </p>
+    </div>
   </div>
 
 </div>
