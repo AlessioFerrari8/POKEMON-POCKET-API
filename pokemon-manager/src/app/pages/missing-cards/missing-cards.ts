@@ -26,7 +26,7 @@ export class MissingCards {
   isLoadingDetails: WritableSignal<boolean> = signal(false);
 
   filterOptions = [
-    { value: 'all', label: 'All Expansions' },
+    { value: 'all', label: 'Others' },
     { value: 'A1', label: 'Genetic Apex' },
     { value: 'A1a', label: 'Mythical Island' },
     { value: 'A2', label: 'Space-Time Smackdown' },
@@ -59,49 +59,41 @@ export class MissingCards {
     const query = this.searchQuery.value.trim();
     const selectedExpansion = this.filterType.value;
 
-    if (selectedExpansion === 'all' && !query) {
-      this.cards.set([]);
-      this.errorMessage.set('Please select an expansion or search for a card');
-      return;
-    }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    if (selectedExpansion && selectedExpansion !== 'all') {
-      // Carica tutte le carte dell'espansione
-      this.service.getSet(selectedExpansion).subscribe({
-        next: (data) => {
-          if (data && data.cards) {
-            let filteredCards = data.cards;
-            
-            // Se c'è una query di ricerca, filtra le carte
-            if (query) {
-              filteredCards = filteredCards.filter((card: IPokemon) =>
-                card.name?.toLowerCase().includes(query.toLowerCase())
-              );
-            }
-            
-            this.cards.set(filteredCards);
-            this.isLoading.set(false);
-            
-            if (filteredCards.length === 0) {
-              this.errorMessage.set(`No cards found for "${query}" in ${this.getCurrentFilterLabel()}`);
-            }
-          } else {
-            this.cards.set([]);
-            this.errorMessage.set('Failed to load expansion data');
-            this.isLoading.set(false);
+    const setId = selectedExpansion === 'all' ? 'P-A' : selectedExpansion;
+
+    this.service.getSet(setId).subscribe({
+      next: (data) => {
+        if (data && data.cards) {
+          let filteredCards = data.cards;
+          
+          // Se c'è una query di ricerca, filtra le carte
+          if (query) {
+            filteredCards = filteredCards.filter((card: IPokemon) =>
+              card.name?.toLowerCase().includes(query.toLowerCase())
+            );
           }
-        },
-        error: (err) => {
-          console.error('Error loading expansion:', err);
+          
+          this.cards.set(filteredCards);
+          
+          if (filteredCards.length === 0) {
+            this.errorMessage.set(`No cards found for "${query}" in ${this.getCurrentFilterLabel()}`);
+          }
+        } else {
           this.cards.set([]);
-          this.errorMessage.set('Error loading expansion. Try again.');
-          this.isLoading.set(false);
+          this.errorMessage.set('Failed to load expansion data');
         }
-      });
-    }
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading expansion:', err);
+        this.cards.set([]);
+        this.errorMessage.set('Error loading expansion. Try again.');
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onCardClicked(card: IPokemon): void {
