@@ -13,6 +13,7 @@ yarn-error.log
 
 # Environment
 .env.local
+public/config.json
 
 # IDEs and editors
 .idea/
