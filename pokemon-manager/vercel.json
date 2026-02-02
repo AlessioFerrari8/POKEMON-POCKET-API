@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd pokemon-manager && npm install && npm run build",
+  "outputDirectory": "pokemon-manager/dist/pokemon-manager/browser",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
