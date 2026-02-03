@@ -24,3 +24,7 @@ https://docs.limitlesstcg.com/developer.html
 - [ ] missing cards in missing cards
 - [ ] make the app responsive (I don't follow mobile-first)
 - [ ] update README
+
+
+# TODO: molto importante
+risolvere problemi con variabili su vercel
