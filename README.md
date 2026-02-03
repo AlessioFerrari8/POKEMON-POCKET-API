@@ -12,7 +12,15 @@ Api for decks
 https://docs.limitlesstcg.com/developer.html 
 
 # TODO:
-- [ ] remove all expansions in missing cards
+- [X] remove all expansions in missing cards 
+    <br>
+    changed with others, which searchs for promo-cards
 - [ ] user
+    <br>
+    doing it
 - [ ] button for adding cards in missing cards 
+    <br>
+    still to do, respond to "how to manage condivided things"
 - [ ] missing cards in missing cards
+- [ ] make the app responsive (I don't follow mobile-first)
+- [ ] update README
