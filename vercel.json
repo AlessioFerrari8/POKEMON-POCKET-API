@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd pokemon-manager && npm install --legacy-peer-deps && npm run build",
+  "buildCommand": "cd pokemon-manager && npm install --legacy-peer-deps && node scripts/build-config.js && npm run build",
   "outputDirectory": "pokemon-manager/dist/pokemon-manager/browser",
   "framework": null,
   "rewrites": [
