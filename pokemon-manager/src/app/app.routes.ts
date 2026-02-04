@@ -6,6 +6,7 @@ import { MissingCards } from './pages/missing-cards/missing-cards';
 import { ExpansionDetail } from './pages/expansion-detail/expansion-detail';
 import { Login } from './components/login/login';
 import { authGuard } from './guards/auth.guard';
+import { UserProfile } from './components/user-profile/user-profile';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'decks', component: Decks, canActivate: [authGuard] },
   { path: 'missing-cards', component: MissingCards, canActivate: [authGuard] },
   { path: 'expansion/:id', component: ExpansionDetail, canActivate: [authGuard] },
+  { path: 'your-profile', component: UserProfile, canActivate: [authGuard] },
   { path: '**', redirectTo: 'home' }
 ];
