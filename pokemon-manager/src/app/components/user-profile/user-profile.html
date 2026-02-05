@@ -1,6 +1,50 @@
-<p>user-profile works!</p>
-<!-- your image
- data
- account
- id pokemon
- other things-->
+<div class="min-h-screen bg-gradient-to-b from-purple-600 to-purple-700 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 animate-fade-in">
+    <!-- Profile Header -->
+    <div class="flex flex-col items-center gap-6 text-center">
+      <div class="w-32 h-32 rounded-full border-4 border-purple-600 shadow-lg bg-gray-200 flex items-center justify-center overflow-hidden">
+        @if (photoURL()) {
+          <img
+            [src]="photoURL()"
+            alt="Profile picture"
+            class="w-full h-full object-cover"
+            (error)="onImageError()"
+          >
+        } @else {
+          <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+          </svg>
+        }
+      </div>
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ displayName() }}</h1>
+        <p class="text-sm text-gray-600 font-medium">{{ email() }}</p>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="my-8 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-3 gap-4">
+      <div
+        class="flex flex-col items-center p-4 bg-gray-50 rounded-xl transition-all duration-300 hover:bg-purple-600 hover:-translate-y-1 cursor-default"
+      >
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 group">Cards Owned</span>
+        <span class="text-2xl font-bold text-purple-600 group-hover:text-white">-</span>
+      </div>
+      <div
+        class="flex flex-col items-center p-4 bg-gray-50 rounded-xl transition-all duration-300 hover:bg-purple-600 hover:-translate-y-1 cursor-default"
+      >
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Decks</span>
+        <span class="text-2xl font-bold text-purple-600 group-hover:text-white">-</span>
+      </div>
+      <div
+        class="flex flex-col items-center p-4 bg-gray-50 rounded-xl transition-all duration-300 hover:bg-purple-600 hover:-translate-y-1 cursor-default"
+      >
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Missing Cards</span>
+        <span class="text-2xl font-bold text-purple-600 group-hover:text-white">-</span>
+      </div>
+    </div>
+  </div>
+</div>

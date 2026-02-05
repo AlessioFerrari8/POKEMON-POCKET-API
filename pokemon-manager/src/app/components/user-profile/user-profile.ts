@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { UsersService } from '../../services/users-service';
+import { IUser } from '../interfaces/i-user';
 
 @Component({
   selector: 'app-user-profile',
@@ -7,7 +9,12 @@ import { Component } from '@angular/core';
   styleUrl: './user-profile.css',
 })
 export class UserProfile {
-  // all cards missing
-  // preferred decks
-  // many more
+  private _usersService = inject(UsersService);
+  displayName: WritableSignal<string | null | undefined> = signal(this._usersService.userData()?.displayName);
+  photoURL: WritableSignal<string | null | undefined> = signal(this._usersService.userData()?.photoURL);
+  email: WritableSignal<string | null | undefined> = signal(this._usersService.userData()?.email);
+
+  onImageError(): void {
+    console.warn('Failed to load image from:', this.photoURL());
+  }
 }
