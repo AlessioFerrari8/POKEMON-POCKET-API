@@ -31,4 +31,8 @@ export class App {
   isLogin(): boolean {
     return this.router.url === '/login';
   }
+
+  isUserProfile(): boolean {
+    return this.router.url === '/your-profile';
+  }
 }
