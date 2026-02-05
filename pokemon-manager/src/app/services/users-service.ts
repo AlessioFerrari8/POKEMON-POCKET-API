@@ -29,6 +29,9 @@ export class UsersService {
   private _isLoading: WritableSignal<boolean> = signal(false);
   isLoading: Signal<boolean> = this._isLoading.asReadonly();
 
+  private _isInitialized: WritableSignal<boolean> = signal(false);
+  isInitialized: Signal<boolean> = this._isInitialized.asReadonly();
+
   constructor() {
     this.initAuthStateListener();
   }
@@ -49,6 +52,7 @@ export class UsersService {
         this._userData.set(null);
         this._isLogged.set(false);
       }
+      this._isInitialized.set(true);
     });
   }
 
