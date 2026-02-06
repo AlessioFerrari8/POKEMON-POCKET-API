@@ -17,11 +17,16 @@
         <h3 class="text-[0.95rem] font-semibold text-[#333] m-0 mb-2 whitespace-nowrap overflow-hidden text-ellipsis" [title]="card.name">
           {{ card.name }}
         </h3>
-        <p class="text-[0.8rem] text-[#999] m-0">
+        <p class="text-[0.8rem] text-[#999] m-0 mb-3">
           #{{ card.localId }}
         </p>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-sm rounded-full">Got it!</button>
+          <button class="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-sm rounded-full">Missing</button>
+        </div>
       </div>
 
     </div>
   }
 </div>
+ 
