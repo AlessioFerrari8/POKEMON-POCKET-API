@@ -1,25 +1,26 @@
-<!-- Modal per i dettagli della carta -->
-@if(selectedCard()) {
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
-    <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
-        <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+<div class="bg-[#1a2847] min-h-screen">
+  <!-- Modal per i dettagli della carta -->
+  @if(selectedCard()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
+      <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
+          <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        @if(isLoadingDetails()) {
+          <p class="text-gray-500 text-center">Loading details...</p>
+        } @else {
+          <app-card-item [card]="selectedCard()!"></app-card-item>
+        }
       </div>
-      @if(isLoadingDetails()) {
-        <p class="text-gray-500 text-center">Loading details...</p>
-      } @else {
-        <app-card-item [card]="selectedCard()!"></app-card-item>
-      }
     </div>
-  </div>
-}
+  }
 
-<div class="mt-4">
-  <form 
-    class="flex items-center max-w-2xl mx-auto gap-2" 
-    (submit)="$event.preventDefault(); performSearch()"
-  >   
+  <div class="mt-4">
+    <form 
+      class="flex items-center max-w-2xl mx-auto gap-2" 
+      (submit)="$event.preventDefault(); performSearch()"
+    >   
     <!-- Dropdown Filter -->
     <div class="relative">
       <button
@@ -121,4 +122,5 @@
     </div>
   }
 
+  </div>
 </div>
