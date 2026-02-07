@@ -11,7 +11,7 @@ import { IUser } from '../interfaces/i-user';
 export class UserProfile {
   private _usersService = inject(UsersService);
   displayName: WritableSignal<string | null | undefined> = signal(this._usersService.userData()?.displayName);
-  photoURL: WritableSignal<string | null | undefined> = signal(this._usersService.userData()?.photoURL);
+  photoURL: WritableSignal<string | null> = signal(this._usersService.userData()?.photoURL ?? null);
   email: WritableSignal<string | null | undefined> = signal(this._usersService.userData()?.email);
 
   onImageError(): void {
