@@ -6,11 +6,13 @@ export const authGuard: CanActivateFn = (route, state) => {
   const usersService = inject(UsersService);
   const router = inject(Router);
 
-  // Aspetta che Firebase verifichi lo stato di autenticazione
+  // Se non è inizializzato ancora, permetti il caricamento
+  // (aspetta che Firebase finisca il controllo)
   if (!usersService.isInitialized()) {
-    return false;
+    return true;
   }
 
+  // Una volta inizializzato, controlla se loggato
   if (usersService.isLogged()) {
     return true;
   } else {
