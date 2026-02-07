@@ -25,6 +25,8 @@ export class MissingCards {
   selectedCard: WritableSignal<IPokemon | null> = signal(null);
   isLoadingDetails: WritableSignal<boolean> = signal(false);
 
+  missingCards: WritableSignal<number> = signal(0);
+
   filterOptions = [
     { value: 'all', label: 'Others' },
     { value: 'A1', label: 'Genetic Apex' },

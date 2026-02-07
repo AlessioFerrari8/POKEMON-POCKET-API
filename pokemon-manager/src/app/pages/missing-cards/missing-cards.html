@@ -104,21 +104,19 @@
       <p class="text-gray-600 text-sm mb-4 text-center">Found {{ cards().length }} cards</p>
       <app-card-grid [cards]="cards()" (cardClicked)="onCardClicked($event)"></app-card-grid>
     </div>
+  } @else if (missingCards() > 0) {
+    <div>
+
+    </div>
   } @else {
-    <div class="absolute z-0 transform -translate-y-4 translate-x-14 rotate-45 scale-70">
-      <img src="/missing/extradimensional-crisis.png" alt="">
-    </div>
-    <div class="absolute z-0 transform -translate-y-54 translate-x-124 scale-35">
-      <img src="/missing/retro.png" alt="">
-    </div>
-    <div class="absolute z-0 transform translate-y-10 translate-x-246 scale-70">
-      <img src="/missing/dunsparce.webp" alt="">
-    </div>
-    <div class="absolute z-0 transform translate-y-10 translate-x-321 scale-70">
-      <img src="/missing/bergmite.webp" alt="">
-    </div>
-    <div class="absolute z-0 transform translate-y-10 translate-x-396 scale-70">
-      <img src="/missing/stunfisk.webp" alt="">
+    <h1 class="text-white text-center mt-4 text-2xl font-bold mt-5">No missing cards.</h1>
+    <div class="flex justify-center items-center gap-2 w-lg mx-auto">
+      <div class="scale-80">
+        <img src="/missing/retro.png" alt="">
+      </div>
+      <div class="scale-80">
+        <img src="/missing/retro.png" alt="">
+      </div>
     </div>
   }
 
