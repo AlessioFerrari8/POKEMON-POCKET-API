@@ -73,12 +73,14 @@ export class UsersService {
           emailVerified: user.emailVerified
         });
         this._isLogged.set(true);
+        this._isInitialized.set(true);
         this._loginError.set(false);
         this.router.navigateByUrl('/');
       })
       .catch((error) => {
         console.error('Login error:', error);
         this._loginError.set(true);
+        this._isInitialized.set(true);
       })
       .finally(() => {
         this._isLoading.set(false);
