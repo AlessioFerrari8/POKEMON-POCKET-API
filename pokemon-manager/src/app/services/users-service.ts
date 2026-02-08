@@ -2,7 +2,8 @@ import { Injectable, inject, signal, Signal, WritableSignal } from '@angular/cor
 import { Router } from '@angular/router';
 import {
   Auth,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
@@ -34,6 +35,30 @@ export class UsersService {
 
   constructor() {
     this.initAuthStateListener();
+    this.handleRedirectResult();
+  }
+
+  private handleRedirectResult(): void {
+    getRedirectResult(this.auth)
+      .then((result) => {
+        if (result?.user) {
+          const user = result.user;
+          this._userData.set({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            emailVerified: user.emailVerified
+          });
+          this._isLogged.set(true);
+          this._loginError.set(false);
+          this._isLoading.set(false);
+        }
+      })
+      .catch((error) => {
+        console.error('Redirect result error:', error);
+        this._isLoading.set(false);
+      });
   }
 
   private initAuthStateListener(): void {
@@ -62,29 +87,12 @@ export class UsersService {
 
     const provider = new GoogleAuthProvider();
     
-    signInWithPopup(this.auth, provider)
-      .then((result) => {
-        const user = result.user;
-        this._userData.set({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          emailVerified: user.emailVerified
-        });
-        this._isLogged.set(true);
-        this._isInitialized.set(true);
-        this._loginError.set(false);
-        this.router.navigateByUrl('/');
-      })
-      .catch((error) => {
-        console.error('Login error:', error);
-        this._loginError.set(true);
-        this._isInitialized.set(true);
-      })
-      .finally(() => {
-        this._isLoading.set(false);
-      });
+    signInWithRedirect(this.auth, provider).catch((error) => {
+      console.error('Login error:', error);
+      this._loginError.set(true);
+      this._isLoading.set(false);
+      this._isInitialized.set(true);
+    });
   }
 
   logout(): void {
