@@ -21,8 +21,28 @@
           #{{ card.localId }}
         </p>
         <div class="flex gap-2">
-          <button class="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-sm rounded-full">Got it!</button>
-          <button class="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-sm rounded-full">Missing</button>
+          <button 
+            (click)="onGotIt(card, $event)" 
+            [disabled]="loadingCardId() === card.id"
+            [class.bg-green-600]="isCardOwned(card.id)"
+            [class.bg-blue-500]="!isCardOwned(card.id)"
+            [class.hover:bg-green-700]="isCardOwned(card.id)"
+            [class.hover:bg-blue-700]="!isCardOwned(card.id)"
+            class="flex-1 text-white font-bold py-1 px-2 text-sm rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            @if (loadingCardId() === card.id) {
+              <span class="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span>
+            }
+            {{ isCardOwned(card.id) ? '✓ Got' : 'Got it!' }}
+          </button>
+          <button 
+            (click)="onMissing(card, $event)" 
+            [disabled]="loadingCardId() === card.id"
+            class="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-sm rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            @if (loadingCardId() === card.id) {
+              <span class="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span>
+            }
+            Missing
+          </button>
         </div>
       </div>
 
