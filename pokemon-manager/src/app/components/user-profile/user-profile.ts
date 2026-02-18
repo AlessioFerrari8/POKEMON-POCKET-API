@@ -1,6 +1,5 @@
 import { Component, inject, signal, WritableSignal, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users-service';
-import { PokemonCollectionService } from '../../services/pokemon-collection-firestore.service';
 import { PokemonSDK } from '../../services/pokemon-sdk';
 import { IUser } from '../interfaces/i-user';
 
@@ -12,7 +11,6 @@ import { IUser } from '../interfaces/i-user';
 })
 export class UserProfile implements OnInit {
   private usersService = inject(UsersService);
-  private pokemonCollectionService = inject(PokemonCollectionService);
   private pokemonSDK = inject(PokemonSDK);
 
   displayName: WritableSignal<string | null | undefined> = signal(this.usersService.userData()?.displayName);
@@ -29,19 +27,9 @@ export class UserProfile implements OnInit {
   }
 
   private loadUserStats() {
-    // Carica le carte possedute
-    this.pokemonCollectionService.getUserCards().subscribe(cards => {
-      this.cardsOwned.set(cards.length);
-    });
-
-    // Carica il numero di carte mancanti (ottiene tutte le carte e calcola)
-    this.pokemonSDK.getCards('tcgp').subscribe(allCards => {
-      this.pokemonCollectionService.getMissingCards(allCards).subscribe(missingCards => {
-        this.missingCardsCount.set(missingCards.length);
-      });
-    });
-
-    // TODO: Caricare i deck quando implementato
+    // TODO: Implementare il caricamento delle statistiche utente
+    this.cardsOwned.set(0);
+    this.missingCardsCount.set(0);
     this.decksCount.set(0);
   }
 

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PokemonSDK } from '../../services/pokemon-sdk';
-import { PokemonCollectionService } from '../../services/pokemon-collection-firestore.service';
+
 import { IPokemon } from '../../components/interfaces/i-pokemon';
 import { CardGridComponent } from '../../components/card-grid/card-grid';
 import { CardItemComponent } from '../../components/card-item/card-item';
@@ -16,7 +16,6 @@ import { CardItemComponent } from '../../components/card-item/card-item';
 })
 export class MissingCards {
   private service = inject(PokemonSDK);
-  private pokemonCollectionService = inject(PokemonCollectionService);
 
   filterType = new FormControl<string>('all', { nonNullable: true });
   searchQuery = new FormControl<string>('', { nonNullable: true });
@@ -80,28 +79,10 @@ export class MissingCards {
             );
           }
 
-          // Filtra per mostrare solo le carte mancanti
-          this.pokemonCollectionService.getMissingCards(filteredCards).subscribe({
-            next: (missingCards) => {
-              this.cards.set(missingCards);
-              this.missingCards.set(missingCards.length);
-              
-              if (missingCards.length === 0) {
-                if (filteredCards.length === 0) {
-                  this.errorMessage.set(`No cards found for "${query}" in ${this.getCurrentFilterLabel()}`);
-                } else {
-                  this.errorMessage.set(`You already have all cards from ${this.getCurrentFilterLabel()}!`);
-                }
-              }
-              this.isLoading.set(false);
-            },
-            error: (err) => {
-              console.error('Error filtering missing cards:', err);
-              this.cards.set(filteredCards);
-              this.missingCards.set(filteredCards.length);
-              this.isLoading.set(false);
-            }
-          });
+          // TODO: Filtrare le carte mancanti da database
+          this.cards.set(filteredCards);
+          this.missingCards.set(filteredCards.length);
+          this.isLoading.set(false);
         } else {
           this.cards.set([]);
           this.errorMessage.set('Failed to load expansion data');
