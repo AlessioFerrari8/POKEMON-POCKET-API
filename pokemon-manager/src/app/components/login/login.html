@@ -9,7 +9,7 @@
     <!-- Error Message -->
     @if (loginError()) {
       <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-        <p class="text-sm">Login failed. Please try again.</p>
+        <p class="text-sm">{{ loginError() }}</p>
       </div>
     }
 
