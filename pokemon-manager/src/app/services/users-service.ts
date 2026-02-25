@@ -6,9 +6,7 @@ import {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
-  User,
-  setPersistence,
-  browserLocalPersistence
+  User
 } from '@angular/fire/auth';
 import { IUser } from '../components/interfaces/i-user';
 
@@ -35,17 +33,8 @@ export class UsersService {
   isInitialized: Signal<boolean> = this._isInitialized.asReadonly();
 
   constructor() {
-    // Abilita la persistenza della sessione usando localStorage
-    setPersistence(this.auth, browserLocalPersistence)
-      .then(() => {
-        console.log('✅ Persistenza Firebase abilitata');
-        this.initAuthStateListener();
-      })
-      .catch((error) => {
-        console.error('❌ Errore nell\'impostazione della persistenza:', error);
-        // Procedi comunque anche se la persistenza fallisce
-        this.initAuthStateListener();
-      });
+    // browserLocalPersistence è già il default per Firebase web, non serve setPersistence
+    this.initAuthStateListener();
   }
 
   private initAuthStateListener(): void {
