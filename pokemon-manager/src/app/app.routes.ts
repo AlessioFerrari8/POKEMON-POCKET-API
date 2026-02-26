@@ -10,12 +10,12 @@ import { UserProfile } from './components/user-profile/user-profile';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home', component: Home, canActivate: [authGuard] },
   { path: 'cards', component: Cards, canActivate: [authGuard] },
   { path: 'decks', component: Decks, canActivate: [authGuard] },
   { path: 'missing-cards', component: MissingCards, canActivate: [authGuard] },
   { path: 'expansion/:id', component: ExpansionDetail, canActivate: [authGuard] },
   { path: 'your-profile', component: UserProfile, canActivate: [authGuard] },
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: 'login' }
 ];
