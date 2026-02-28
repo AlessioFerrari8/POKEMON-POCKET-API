@@ -4,6 +4,7 @@ import { provideHttpClient, HttpClient } from '@angular/common/http';
 import { initializeApp } from '@angular/fire/app';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -50,6 +51,7 @@ export const appConfig: ApplicationConfig = {
       multi: true
     },
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth())
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore())
   ]
 };
