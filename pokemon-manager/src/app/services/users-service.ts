@@ -8,15 +8,19 @@ import {
   onAuthStateChanged,
   User
 } from '@angular/fire/auth';
+import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { IUser } from '../components/interfaces/i-user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
+  // auth + routing
   private auth = inject(Auth);
   private router = inject(Router);
+  private firestore = inject(Firestore);
 
+  // variables for managin user
   private _userData: WritableSignal<IUser | null> = signal<IUser | null>(null);
   userData: Signal<IUser | null> = this._userData.asReadonly();
 
@@ -37,20 +41,57 @@ export class UsersService {
     this.initAuthStateListener();
   }
 
+  // TODO: use Observable instead of Promises
+  private async setUserData(user: User): Promise<void> {
+    const userAppData: IUser = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      emailVerified: user.emailVerified
+    };
+    // update signal
+    this._userData.set(userAppData);
+    this._isLogged.set(true);
+    this._loginError.set('');
+
+    // sinc con Firestore
+    await this.syncUserToFirestore(userAppData);
+  }
+
+  private async syncUserToFirestore(userData: IUser): Promise<void> {
+    const userDocRef = doc(this.firestore, `users/${userData.uid}`);
+    
+    try {
+      // setDoc con { merge: true }
+      // utente non esiste, lo crea, se esiste aggiorna solo i campi cambiati
+      // senza sovrascrivere eventuali altri dati
+      await setDoc(userDocRef, { 
+        ...userData, 
+        lastLogin: new Date() 
+      }, { merge: true });
+      
+      console.log('Sync Firestore completato');
+    } catch (error) {
+      console.error('Errore durante il sync Firestore:', error);
+    }
+  } 
+
   private initAuthStateListener(): void {
-    console.log('🔍 Impostazione listener per i cambiamenti di auth state...');
-    onAuthStateChanged(this.auth, (user: User | null) => {
-      console.log('📡 Auth state changed - Utente:', user ? user.email : 'null');
+    console.log('Impostazione listener per i cambiamenti di auth state...');
+    onAuthStateChanged(this.auth, async (user: User | null) => {
+      console.log('Auth state changed - Utente:', user ? user.email : 'null');
       if (user) {
-        console.log('✅ Utente loggato:', user.email);
+        await this.saveUserToFirestore(user); // salvo o aggiorno firestore
+        await this.fetchAndSetUserData(user);
+        console.log('Utente loggato:', user.email);
         this.setUserData(user);
         // Se siamo sulla pagina di login e c'è un utente, naviga a home
         if (this.router.url === '/login') {
-          console.log('🔄 Navigazione da login a home...');
           this.router.navigateByUrl('/home');
         }
       } else {
-        console.log('ℹ️ Nessun utente loggato');
+        console.log('ℹNessun utente loggato');
         this._userData.set(null);
         this._isLogged.set(false);
       }
@@ -58,17 +99,53 @@ export class UsersService {
     });
   }
 
-  private setUserData(user: User): void {
-    this._userData.set({
+  // scrittura su firestore
+  private async saveUserToFirestore(user: User): Promise<void> {
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    
+    // Usiamo setDoc con merge: true
+    // Questo crea il documento se manca, o lo aggiorna se esiste
+    await setDoc(userRef, {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
       photoURL: user.photoURL,
       emailVerified: user.emailVerified
-    });
-    this._isLogged.set(true);
-    this._loginError.set('');
+    }, { merge: true });
   }
+
+  // Funzione per leggere i dati da Firestore e aggiornare i Signals
+  private async fetchAndSetUserData(user: User): Promise<void> {
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    const snap = await getDoc(userRef);
+    
+    if (snap.exists()) {
+      const data = snap.data();
+      this._userData.set({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        emailVerified: user.emailVerified,
+        // Qui prendiamo i dati specifici che hai creato su Firestore
+        cardsOwnedCount: data['cardsOwnedCount'] || 0,
+        missingCards: data['missingCards'] || []
+      });
+      this._isLogged.set(true);
+    }
+  }
+
+  // private setUserData(user: User): void {
+  //   this._userData.set({
+  //     uid: user.uid,
+  //     email: user.email,
+  //     displayName: user.displayName,
+  //     photoURL: user.photoURL,
+  //     emailVerified: user.emailVerified
+  //   });
+  //   this._isLogged.set(true);
+  //   this._loginError.set('');
+  // }
 
   loginWithGoogle(): void {
     this._isLoading.set(true);
