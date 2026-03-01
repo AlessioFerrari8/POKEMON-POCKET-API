@@ -18,4 +18,8 @@ export class NavBar {
   logout(): void {
     this.usersService.logout();
   }
+
+  getImage(): string {
+    return this.usersService.userData()?.photoURL ?? 'person.png';
+  }
 }
