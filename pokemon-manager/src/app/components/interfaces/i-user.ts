@@ -7,5 +7,6 @@ export interface IUser {
   photoURL: string | null;
   emailVerified: boolean;
   cardsOwnedCount?: number; // non necessariamente cè
+  ownedCards?: string[];       // lista degli id delle carte segnate come owned
   missingCards?: IPokemon[];
 }
