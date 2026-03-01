@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
   User
 } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from '@angular/fire/firestore';
 import { IUser } from '../components/interfaces/i-user';
 
 @Injectable({
@@ -129,6 +129,7 @@ export class UsersService {
         emailVerified: user.emailVerified,
         // Qui prendiamo i dati specifici che hai creato su Firestore
         cardsOwnedCount: data['cardsOwnedCount'] || 0,
+        ownedCards: data['ownedCards'] || [],
         missingCards: data['missingCards'] || []
       });
       this._isLogged.set(true);
@@ -146,6 +147,42 @@ export class UsersService {
   //   this._isLogged.set(true);
   //   this._loginError.set('');
   // }
+
+  isCardOwned(cardId: string): boolean {
+    return this._userData()?.ownedCards?.includes(cardId) ?? false;
+  }
+
+  async toggleCardOwned(cardId: string): Promise<void> {
+    const user = this._userData();
+    if (!user) return;
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    const owned = this.isCardOwned(cardId);
+
+    if (owned) {
+      // rimuovi carta e decrementa contatore
+      await updateDoc(userRef, {
+        ownedCards: arrayRemove(cardId),
+        cardsOwnedCount: increment(-1)
+      });
+      this._userData.set({
+        ...user,
+        ownedCards: (user.ownedCards ?? []).filter(id => id !== cardId),
+        cardsOwnedCount: (user.cardsOwnedCount ?? 1) - 1
+      });
+    } else {
+      // aggiungi carta e incrementa contatore
+      await updateDoc(userRef, {
+        ownedCards: arrayUnion(cardId),
+        cardsOwnedCount: increment(1)
+      });
+      this._userData.set({
+        ...user,
+        ownedCards: [...(user.ownedCards ?? []), cardId],
+        cardsOwnedCount: (user.cardsOwnedCount ?? 0) + 1
+      });
+    }
+  }
 
   loginWithGoogle(): void {
     this._isLoading.set(true);
