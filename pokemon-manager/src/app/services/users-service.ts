@@ -10,6 +10,8 @@ import {
 } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from '@angular/fire/firestore';
 import { IUser } from '../components/interfaces/i-user';
+import { IPokemon } from '../components/interfaces/i-pokemon';
+import { ILightPokemon } from '../components/interfaces/i-light-pokemon';
 
 @Injectable({
   providedIn: 'root',
@@ -85,7 +87,6 @@ export class UsersService {
         await this.saveUserToFirestore(user); // salvo o aggiorno firestore
         await this.fetchAndSetUserData(user);
         console.log('Utente loggato:', user.email);
-        this.setUserData(user);
         // Se siamo sulla pagina di login e c'è un utente, naviga a home
         if (this.router.url === '/login') {
           this.router.navigateByUrl('/home');
@@ -150,6 +151,43 @@ export class UsersService {
 
   isCardOwned(cardId: string): boolean {
     return this._userData()?.ownedCards?.includes(cardId) ?? false;
+  }
+
+  isCardMissing(cardId: string): boolean {
+    return this._userData()?.missingCards?.some(c => c.id === cardId) ?? false;
+  }
+
+  async toggleMissingCard(card: IPokemon): Promise<void> {
+    const user = this._userData();
+    if (!user) return;
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    const currentMissing: ILightPokemon[] = user.missingCards ?? [];
+    const alreadyMissing = this.isCardMissing(card.id);
+
+    let updatedMissing: ILightPokemon[];
+
+    if (alreadyMissing) {
+      updatedMissing = currentMissing.filter(c => c.id !== card.id);
+    } else {
+      const lightCard: ILightPokemon = {
+        id: card.id,
+        name: card.name ?? '',
+        image: card.image ?? '',
+        localId: card.localId ?? '',
+        category: card.category ?? '',
+        illustrator: card.illustrator ?? '',
+        rarity: card.rarity ?? '',
+        dexId: card.dexId ?? [],
+        hp: card.hp ?? 0,
+        types: card.types ?? [],
+        stage: card.stage ?? ''
+      };
+      updatedMissing = [...currentMissing, lightCard];
+    }
+
+    await updateDoc(userRef, { missingCards: updatedMissing });
+    this._userData.set({ ...user, missingCards: updatedMissing });
   }
 
   async toggleCardOwned(cardId: string): Promise<void> {
