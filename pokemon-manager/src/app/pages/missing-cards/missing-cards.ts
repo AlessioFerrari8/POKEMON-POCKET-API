@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PokemonSDK } from '../../services/pokemon-sdk';
+import { UsersService } from '../../services/users-service';
 
 import { IPokemon } from '../../components/interfaces/i-pokemon';
+import { ILightPokemon } from '../../components/interfaces/i-light-pokemon';
 import { CardGridComponent } from '../../components/card-grid/card-grid';
 import { CardItemComponent } from '../../components/card-item/card-item';
 
@@ -16,17 +18,21 @@ import { CardItemComponent } from '../../components/card-item/card-item';
 })
 export class MissingCards {
   private service = inject(PokemonSDK);
+  private usersService = inject(UsersService);
 
   filterType = new FormControl<string>('all', { nonNullable: true });
   searchQuery = new FormControl<string>('', { nonNullable: true });
   isDropdownOpen: WritableSignal<boolean> = signal(false);
-  cards: WritableSignal<IPokemon[]> = signal([]);
+  searchResults: WritableSignal<IPokemon[]> = signal([]);
   isLoading: WritableSignal<boolean> = signal(false);
   errorMessage: WritableSignal<string> = signal('');
   selectedCard: WritableSignal<IPokemon | null> = signal(null);
   isLoadingDetails: WritableSignal<boolean> = signal(false);
 
-  missingCards: WritableSignal<number> = signal(0);
+  // carte mancanti prese direttamente dal profilo utente
+  userMissingCards: Signal<ILightPokemon[]> = computed(
+    () => this.usersService.userData()?.missingCards ?? []
+  );
 
   filterOptions = [
     { value: 'all', label: 'Others' },
@@ -71,27 +77,22 @@ export class MissingCards {
       next: (data) => {
         if (data && data.cards) {
           let filteredCards = data.cards;
-          
-          // Se c'è una query di ricerca, filtra le carte
           if (query) {
             filteredCards = filteredCards.filter((card: IPokemon) =>
               card.name?.toLowerCase().includes(query.toLowerCase())
             );
           }
-
-          // TODO: Filtrare le carte mancanti da database
-          this.cards.set(filteredCards);
-          this.missingCards.set(filteredCards.length);
+          this.searchResults.set(filteredCards);
           this.isLoading.set(false);
         } else {
-          this.cards.set([]);
+          this.searchResults.set([]);
           this.errorMessage.set('Failed to load expansion data');
           this.isLoading.set(false);
         }
       },
       error: (err) => {
         console.error('Error loading expansion:', err);
-        this.cards.set([]);
+        this.searchResults.set([]);
         this.errorMessage.set('Error loading expansion. Try again.');
         this.isLoading.set(false);
       }
@@ -101,7 +102,7 @@ export class MissingCards {
   onCardClicked(card: IPokemon): void {
     this.selectedCard.set(card);
     this.isLoadingDetails.set(true);
-    
+
     this.service.getPokemonDetails(card.id, card.image).subscribe({
       next: (details) => {
         if (details && Object.keys(details).length > 0) {
