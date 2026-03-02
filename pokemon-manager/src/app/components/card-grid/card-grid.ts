@@ -24,18 +24,28 @@ export class CardGridComponent {
   async onGotIt(card: IPokemon, event: Event): Promise<void> {
     event.stopPropagation();
     this.loadingCardId.set(card.id);
-    await this.usersService.toggleCardOwned(card.id);
-    this.loadingCardId.set(null);
+    try {
+      await this.usersService.toggleCardOwned(card.id);
+    } finally {
+      this.loadingCardId.set(null);
+    }
   }
 
-  onMissing(card: IPokemon, event: Event): void {
+  async onMissing(card: IPokemon, event: Event): Promise<void> {
     event.stopPropagation();
     this.loadingCardId.set(card.id);
-    // TODO: Implementare logica per marcare come mancante
-    this.loadingCardId.set(null);
+    try {
+      await this.usersService.toggleMissingCard(card);
+    } finally {
+      this.loadingCardId.set(null);
+    }
   }
 
   isCardOwned(cardId: string): boolean {
     return this.usersService.isCardOwned(cardId);
+  }
+
+  isCardMissing(cardId: string): boolean {
+    return this.usersService.isCardMissing(cardId);
   }
 }
