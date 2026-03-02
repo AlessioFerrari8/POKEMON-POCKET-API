@@ -1,4 +1,4 @@
-export interface IPokemon {
+export interface ILightPokemon {
   category: string
   id: string
   illustrator: string
