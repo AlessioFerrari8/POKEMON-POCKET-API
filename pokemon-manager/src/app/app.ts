@@ -35,4 +35,8 @@ export class App {
   isUserProfile(): boolean {
     return this.router.url === '/your-profile';
   }
+
+  isDecks(): boolean {
+    return this.router.url === '/decks';
+  }
 }
