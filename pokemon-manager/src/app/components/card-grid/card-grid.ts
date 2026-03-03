@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, signal, WritableSignal 
 import { CommonModule } from '@angular/common';
 import { IPokemon } from '../interfaces/i-pokemon';
 import { UsersService } from '../../services/users-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-grid',
@@ -13,6 +14,7 @@ import { UsersService } from '../../services/users-service';
 export class CardGridComponent {
   @Input() cards: IPokemon[] = [];
   @Output() cardClicked = new EventEmitter<IPokemon>();
+  private router = inject(Router)
 
   private usersService = inject(UsersService);
   loadingCardId: WritableSignal<string | null> = signal(null);
@@ -47,5 +49,9 @@ export class CardGridComponent {
 
   isCardMissing(cardId: string): boolean {
     return this.usersService.isCardMissing(cardId);
+  }
+
+  isDecks(): boolean {
+    return this.router.url == '/decks';
   }
 }
