@@ -12,6 +12,7 @@ import { Firestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, inc
 import { IUser } from '../components/interfaces/i-user';
 import { IPokemon } from '../components/interfaces/i-pokemon';
 import { ILightPokemon } from '../components/interfaces/i-light-pokemon';
+import { IDeck } from '../components/interfaces/i-deck';
 
 @Injectable({
   providedIn: 'root',
@@ -131,7 +132,8 @@ export class UsersService {
         // Qui prendiamo i dati specifici che hai creato su Firestore
         cardsOwnedCount: data['cardsOwnedCount'] || 0,
         ownedCards: data['ownedCards'] || [],
-        missingCards: data['missingCards'] || []
+        missingCards: data['missingCards'] || [],
+        decks: data['decks'] || []
       });
       this._isLogged.set(true);
     }
@@ -220,6 +222,66 @@ export class UsersService {
         cardsOwnedCount: (user.cardsOwnedCount ?? 0) + 1
       });
     }
+  }
+
+  async deleteDeck(deckId: string): Promise<void> {
+    const user = this._userData();
+    if (!user) return;
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    const updatedDecks = (user.decks ?? []).filter(d => d.id !== deckId);
+
+    await updateDoc(userRef, { decks: updatedDecks });
+    this._userData.set({ ...user, decks: updatedDecks });
+  }
+
+  async saveDeck(name: string, cards: IPokemon[]): Promise<void> {
+    const user = this._userData();
+    if (!user) throw new Error('Utente non autenticato');
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+
+    const lightCards: ILightPokemon[] = cards
+      .filter(c => c !== null)
+      .map(c => ({
+        id: c.id,
+        name: c.name ?? '',
+        image: c.image ?? '',
+        localId: c.localId ?? '',
+        category: c.category ?? '',
+        illustrator: c.illustrator ?? '',
+        rarity: c.rarity ?? '',
+        dexId: c.dexId ?? [],
+        hp: c.hp ?? 0,
+        types: c.types ?? [],
+        stage: c.stage ?? ''
+      }));
+
+    const now = new Date().toISOString();
+    const existingDecks: IDeck[] = user.decks ?? [];
+    const existingIndex = existingDecks.findIndex(d => d.name === name);
+
+    let updatedDecks: IDeck[];
+
+    if (existingIndex >= 0) {
+      // aggiorna deck esistente
+      updatedDecks = existingDecks.map((d, i) =>
+        i === existingIndex ? { ...d, cards: lightCards, updatedAt: now } : d
+      );
+    } else {
+      // crea nuovo deck
+      const newDeck: IDeck = {
+        id: crypto.randomUUID(),
+        name,
+        cards: lightCards,
+        createdAt: now,
+        updatedAt: now
+      };
+      updatedDecks = [...existingDecks, newDeck];
+    }
+
+    await updateDoc(userRef, { decks: updatedDecks });
+    this._userData.set({ ...user, decks: updatedDecks });
   }
 
   loginWithGoogle(): void {
