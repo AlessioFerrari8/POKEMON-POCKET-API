@@ -1,1 +1,194 @@
-<h1 class="text-[#1e293b] text-center mt-4 text-2xl font-bold">Waiting for API...</h1>
+<div class="flex h-full bg-[#0f172a] text-white overflow-hidden mt-2">
+
+  <!-- LEFT PANEL: Deck Builder -->
+  <div class="flex flex-col w-[340px] min-w-[300px] bg-[#1e293b] border-r border-[#334155] p-4 gap-4">
+
+    <!-- Deck Name -->
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center gap-2">
+        <input
+          type="text"
+          [(ngModel)]="deckName"
+          placeholder="Decks' name..."
+          class="flex-1 bg-[#0f172a] border border-[#334155] rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+        <button
+          (click)="saveDeck()"
+          [disabled]="saveStatus() === 'saving'"
+          class="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-3 py-2 rounded-lg transition-colors"
+        >
+          {{ saveStatus() === 'saving' ? '...' : 'Save' }}
+        </button>
+      </div>
+      <!-- Feedback message -->
+      @if (saveStatus() !== 'idle') {
+        <p
+          class="text-xs px-1 transition-all"
+          [ngClass]="{
+            'text-emerald-400': saveStatus() === 'saved',
+            'text-red-400': saveStatus() === 'error',
+            'text-slate-400': saveStatus() === 'saving'
+          }"
+        >{{ saveMessage() }}</p>
+      }
+    </div>
+
+    <!-- Deck Counter -->
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-slate-400">Cards in deck</span>
+      <span class="font-bold text-white">{{ getDeckCount() }} <span class="text-slate-500">/ 20</span></span>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full bg-[#0f172a] rounded-full h-2 overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-500 to-cyan-400 h-2 rounded-full transition-all duration-300" [style.width]="getDeckProgress() + '%'"></div>
+    </div>
+
+    <!-- Deck Grid (20 slots, 4x5) -->
+    <div class="grid grid-cols-4 gap-2 flex-1 overflow-y-auto">
+      @for (slot of deckSlots; track $index) {
+        <div
+          class="relative aspect-[2.5/3.5] rounded-lg overflow-hidden cursor-pointer border-2 transition-all duration-200"
+          [ngClass]="slot ? 'border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.4)]' : 'border-dashed border-slate-600 bg-[#0f172a] hover:border-slate-400'"
+        >
+          @if (slot) {
+            <img [src]="slot.image + '/low.webp'" [alt]="slot.name" class="w-full h-full object-contain" />
+            <!-- Remove button -->
+            <button
+              (click)="removeCard($index)"
+              class="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 hover:bg-red-500 rounded-full text-xs flex items-center justify-center transition-opacity"
+            >×</button>
+          } @else {
+            <div class="w-full h-full flex items-center justify-center text-slate-700 text-xl">+</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-2">
+      <button (click)="clearDeck()" class="flex-1 bg-red-700 hover:bg-red-600 text-white text-sm font-semibold py-2 rounded-lg transition-colors">
+        Clear
+      </button>
+      <button (click)="exportDeck()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold py-2 rounded-lg transition-colors">
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Card Browser / My Decks -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+
+    <!-- Top bar with tabs -->
+    <div class="flex items-center gap-3 px-4 pt-2 border-b border-[#334155] bg-[#1e293b] flex-wrap">
+
+      <!-- Tabs -->
+      <div class="flex gap-1 shrink-0 -mb-[1px]">
+        <button
+          (click)="activeTab.set('cards')"
+          class="px-4 py-2 text-sm font-semibold rounded-t-lg border-b-2 transition-colors"
+          [ngClass]="activeTab() === 'cards'
+            ? 'border-blue-500 text-blue-400 bg-[#0f172a]'
+            : 'border-transparent text-slate-400 hover:text-white'"
+        >Cards</button>
+        <button
+          (click)="activeTab.set('mydecks')"
+          class="px-4 py-2 text-sm font-semibold rounded-t-lg border-b-2 transition-colors"
+          [ngClass]="activeTab() === 'mydecks'
+            ? 'border-blue-500 text-blue-400 bg-[#0f172a]'
+            : 'border-transparent text-slate-400 hover:text-white'"
+        >My Decks <span class="ml-1 text-xs bg-slate-700 px-1.5 py-0.5 rounded-full">{{ savedDecks().length }}</span></button>
+      </div>
+
+      <!-- Search Bar (only on cards tab) -->
+      @if (activeTab() === 'cards') {
+        <div class="flex-1 min-w-[200px] -mt-4 mb-2">
+          <app-search-bar (resultsChanged)="onSearchResults($event)" />
+        </div>
+      }
+    </div>
+
+    <!-- CARDS TAB -->
+    @if (activeTab() === 'cards') {
+      <div class="flex-1 overflow-y-auto p-4">
+        @if (loading) {
+          <p class="flex align-items justify-center text-slate-500">Search for a card</p>
+        } @else {
+          <div class="relative">
+            <app-card-grid [cards]="filteredCards" (cardClicked)="addCard($event)" />
+            <div class="absolute inset-0 pointer-events-none grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full p-0">
+              @for (card of filteredCards; track card.id) {
+                <div class="relative">
+                  @if (getCount(card.id) > 0) {
+                    <div class="absolute top-2 left-2 w-6 h-6 bg-blue-600 border-2 border-white rounded-full text-xs font-bold flex items-center justify-center shadow z-10">
+                      {{ getCount(card.id) }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+          @if (filteredCards.length === 0) {
+            <div class="text-center py-16 text-slate-500">
+              <p class="text-4xl mb-3">🃏</p>
+              <p class="text-sm">No cards found!</p>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- MY DECKS TAB -->
+    @if (activeTab() === 'mydecks') {
+      <div class="flex-1 overflow-y-auto p-4">
+        @if (savedDecks().length === 0) {
+          <div class="text-center py-16 text-slate-500">
+            <p class="text-4xl mb-3">📦</p>
+            <p class="text-sm">No saved decks yet!</p>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (deck of savedDecks(); track deck.id) {
+              <div class="bg-[#1e293b] border border-[#334155] rounded-xl p-4 flex flex-col gap-3 hover:border-blue-500 transition-colors">
+
+                <!-- Deck header -->
+                <div class="flex items-center justify-between">
+                  <h3 class="font-bold text-white text-base truncate">{{ deck.name }}</h3>
+                  <span class="text-xs text-slate-400 shrink-0 ml-2">{{ deck.cards.length }}/20</span>
+                </div>
+
+                <!-- Card previews (first 6) -->
+                <div class="grid grid-cols-6 gap-1">
+                  @for (card of deck.cards.slice(0, 6); track card.id) {
+                    <div class="aspect-[2.5/3.5] rounded overflow-hidden bg-[#0f172a]">
+                      <img [src]="card.image + '/low.webp'" [alt]="card.name" class="w-full h-full object-contain" />
+                    </div>
+                  }
+                  @if (deck.cards.length > 6) {
+                    <div class="col-span-1 flex items-center justify-center text-slate-500 text-xs">
+                      +{{ deck.cards.length - 6 }}
+                    </div>
+                  }
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2 mt-auto">
+                  <button
+                    (click)="loadDeck(deck)"
+                    class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-1.5 rounded-lg transition-colors"
+                  >Load</button>
+                  <button
+                    (click)="deleteDeck(deck.id)"
+                    class="bg-red-700 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                  >Delete</button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+
+</div>
