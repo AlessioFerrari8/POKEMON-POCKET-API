@@ -1,4 +1,5 @@
 import { ILightPokemon } from "./i-light-pokemon";
+import { IDeck } from "./i-deck";
 
 export interface IUser {
   uid: string;
@@ -7,6 +8,7 @@ export interface IUser {
   photoURL: string | null;
   emailVerified: boolean;
   cardsOwnedCount?: number;
-  ownedCards?: string[];       // lista degli id delle carte segnate come owned
+  ownedCards?: string[]; // lista degli id delle carte segnate come owned
   missingCards?: ILightPokemon[];
+  decks?: IDeck[]; // mazzi salvati 
 }
