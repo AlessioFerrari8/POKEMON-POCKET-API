@@ -1,6 +1,5 @@
-import { Component, inject, computed, Signal, signal, WritableSignal, OnInit } from '@angular/core';
+import { Component, inject, computed, Signal } from '@angular/core';
 import { UsersService } from '../../services/users-service';
-import { PokemonSDK } from '../../services/pokemon-sdk';
 
 @Component({
   selector: 'app-user-profile',
@@ -16,7 +15,7 @@ export class UserProfile {
   email: Signal<string | null | undefined> = computed(() => this.usersService.userData()?.email);
 
   cardsOwned: Signal<number> = computed(() => this.usersService.userData()?.cardsOwnedCount ?? 0);
-  decksCount: WritableSignal<number> = signal(0);
+  decksCount: Signal<number> = computed(() => this.usersService.userData()?.decks?.length ?? 0);
   missingCardsCount: Signal<number> = computed(() => this.usersService.userData()?.missingCards?.length ?? 0);
 
   onImageError(): void {
