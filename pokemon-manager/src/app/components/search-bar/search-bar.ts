@@ -1,4 +1,4 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal, Output, EventEmitter } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PokemonSDK } from '../../services/pokemon-sdk';
 import { IPokemon } from '../interfaces/i-pokemon';
@@ -12,6 +12,8 @@ import { IPokemon } from '../interfaces/i-pokemon';
 })
 export class SearchBar {
   private service = inject(PokemonSDK);
+
+  @Output() resultsChanged = new EventEmitter<IPokemon[]>();
 
   public searchResults: WritableSignal<IPokemon[]> = signal([]);
   public isLoading: WritableSignal<boolean> = signal(false);
@@ -34,6 +36,7 @@ export class SearchBar {
     this.service.searchCards(query).subscribe({
       next: (cards) => {
         this.searchResults.set(cards);
+        this.resultsChanged.emit(cards);
         this.isLoading.set(false);
         if (cards.length === 0) {
           this.errorMessage.set(`No results found for "${query}"`);
