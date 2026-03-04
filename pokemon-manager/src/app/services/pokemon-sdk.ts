@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import TCGdex from '@tcgdex/sdk';
+import TCGdex, { Query } from '@tcgdex/sdk';
 import { from, map, Observable, shareReplay, catchError, of, tap } from 'rxjs';
 import { IPokemon } from '../components/interfaces/i-pokemon';
 
