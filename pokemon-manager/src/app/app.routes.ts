@@ -7,6 +7,7 @@ import { ExpansionDetail } from './pages/expansion-detail/expansion-detail';
 import { Login } from './components/login/login';
 import { authGuard } from './guards/auth.guard';
 import { UserProfile } from './components/user-profile/user-profile';
+import { Settings } from './components/settings/settings';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'missing-cards', component: MissingCards, canActivate: [authGuard] },
   { path: 'expansion/:id', component: ExpansionDetail, canActivate: [authGuard] },
   { path: 'your-profile', component: UserProfile, canActivate: [authGuard] },
+  { path: 'settings', component: Settings, canActivate: [authGuard] },
   { path: '**', redirectTo: 'login' }
 ];

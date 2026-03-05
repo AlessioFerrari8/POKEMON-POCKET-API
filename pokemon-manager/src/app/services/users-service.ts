@@ -9,7 +9,7 @@ import {
   User
 } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from '@angular/fire/firestore';
-import { IUser } from '../components/interfaces/i-user';
+import { AppLanguage, IUser } from '../components/interfaces/i-user';
 import { IPokemon } from '../components/interfaces/i-pokemon';
 import { ILightPokemon } from '../components/interfaces/i-light-pokemon';
 import { IDeck } from '../components/interfaces/i-deck';
@@ -123,20 +123,80 @@ export class UsersService {
     
     if (snap.exists()) {
       const data = snap.data();
+      const nickname = typeof data['nickname'] === 'string' ? data['nickname'] : null;
+      const language: AppLanguage = data['settings']?.language === 'en' ? 'en' : 'it';
+      const useGoogleTranslate = Boolean(data['settings']?.useGoogleTranslate);
+
       this._userData.set({
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName,
+        displayName: nickname ?? data['displayName'] ?? user.displayName,
+        nickname,
         photoURL: user.photoURL,
         emailVerified: user.emailVerified,
         // Qui prendiamo i dati specifici che hai creato su Firestore
         cardsOwnedCount: data['cardsOwnedCount'] || 0,
         ownedCards: data['ownedCards'] || [],
         missingCards: data['missingCards'] || [],
-        decks: data['decks'] || []
+        decks: data['decks'] || [],
+        settings: {
+          language,
+          useGoogleTranslate
+        }
       });
       this._isLogged.set(true);
     }
+  }
+
+  async updateNickname(newNickname: string): Promise<void> {
+    const user = this._userData();
+    if (!user) throw new Error('Utente non autenticato');
+
+    const normalized = newNickname.trim();
+    if (normalized.length < 2 || normalized.length > 24) {
+      throw new Error('Il nickname deve contenere da 2 a 24 caratteri');
+    }
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    await updateDoc(userRef, {
+      nickname: normalized,
+      displayName: normalized
+    });
+
+    this._userData.set({
+      ...user,
+      nickname: normalized,
+      displayName: normalized
+    });
+  }
+
+  async updateLanguage(language: AppLanguage): Promise<void> {
+    const user = this._userData();
+    if (!user) throw new Error('Utente non autenticato');
+
+    const normalizedLanguage: AppLanguage = language === 'en' ? 'en' : 'it';
+    const updatedSettings = {
+      language: normalizedLanguage,
+      useGoogleTranslate: user.settings?.useGoogleTranslate ?? false
+    };
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    await updateDoc(userRef, { settings: updatedSettings });
+    this._userData.set({ ...user, settings: updatedSettings });
+  }
+
+  async updateGoogleTranslatePreference(enabled: boolean): Promise<void> {
+    const user = this._userData();
+    if (!user) throw new Error('Utente non autenticato');
+
+    const updatedSettings = {
+      language: user.settings?.language ?? 'it',
+      useGoogleTranslate: enabled
+    };
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    await updateDoc(userRef, { settings: updatedSettings });
+    this._userData.set({ ...user, settings: updatedSettings });
   }
 
   // private setUserData(user: User): void {
