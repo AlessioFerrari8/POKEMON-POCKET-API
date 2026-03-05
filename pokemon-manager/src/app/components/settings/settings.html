@@ -1,8 +1,8 @@
 <section class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 px-4 py-10 text-slate-100">
 	<div class="mx-auto w-full max-w-2xl rounded-2xl border border-slate-700 bg-slate-800/70 p-6 shadow-2xl backdrop-blur-sm md:p-8">
 		<header class="mb-8">
-			<h1 class="text-2xl font-bold tracking-tight md:text-3xl">{{ t('title') }}</h1>
-			<p class="mt-2 text-sm text-slate-300 md:text-base">{{ t('subtitle') }}</p>
+			<h1 class="text-2xl font-bold tracking-tight md:text-3xl">Account Settings</h1>
+				<p class="mt-2 text-sm text-slate-300 md:text-base">Manage your account's nickname.</p>
 		</header>
 
 		@if (successMessage()) {
@@ -19,8 +19,8 @@
 
 		<div class="space-y-7">
 			<section class="rounded-xl border border-slate-700 bg-slate-900/40 p-5">
-				<label for="nickname" class="block text-sm font-semibold text-slate-100">{{ t('nicknameLabel') }}</label>
-				<p class="mt-1 text-xs text-slate-400">{{ t('nicknameHint') }}</p>
+				<label for="nickname" class="block text-sm font-semibold text-slate-100">Nickname</label>
+				<p class="mt-1 text-xs text-slate-400">At least 2 chars, max 24.</p>
 
 				<div class="mt-4 flex flex-col gap-3 sm:flex-row">
 					<input
@@ -38,60 +38,9 @@
 						[disabled]="isSavingNickname()"
 						class="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
 					>
-						{{ isSavingNickname() ? t('saving') : t('nicknameAction') }}
+						{{ isSavingNickname() ? 'Saving...' : 'Save Nickname' }}
 					</button>
 				</div>
-			</section>
-
-			<section class="rounded-xl border border-slate-700 bg-slate-900/40 p-5">
-				<label for="language" class="block text-sm font-semibold text-slate-100">{{ t('languageLabel') }}</label>
-				<p class="mt-1 text-xs text-slate-400">{{ t('languageHint') }}</p>
-
-				<div class="mt-4 flex flex-col gap-3 sm:flex-row">
-					<select
-						id="language"
-						name="language"
-						[(ngModel)]="language"
-						class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none"
-					>
-						<option value="it">{{ t('italian') }}</option>
-						<option value="en">{{ t('english') }}</option>
-					</select>
-
-					<button
-						type="button"
-						(click)="saveLanguage()"
-						[disabled]="isSavingLanguage()"
-						class="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
-					>
-						{{ isSavingLanguage() ? t('saving') : t('languageAction') }}
-					</button>
-				</div>
-			</section>
-
-			<section class="rounded-xl border border-slate-700 bg-slate-900/40 p-5">
-				<label class="flex items-center gap-3 text-sm font-semibold text-slate-100">
-					<input
-						id="googleTranslate"
-						name="googleTranslate"
-						type="checkbox"
-						[(ngModel)]="useGoogleTranslate"
-						(change)="onGoogleTranslateToggle()"
-						class="h-4 w-4 rounded border-slate-600 bg-slate-900 text-cyan-400 focus:ring-cyan-500"
-					>
-					{{ t('translateToggleLabel') }}
-				</label>
-
-				<p class="mt-2 text-xs text-slate-400">{{ t('translateToggleHint') }}</p>
-
-				<button
-					type="button"
-					(click)="openGoogleTranslate()"
-					[disabled]="!useGoogleTranslate || isSavingTranslatePreference()"
-					class="mt-4 rounded-lg border border-cyan-500 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/10 disabled:cursor-not-allowed disabled:opacity-60"
-				>
-					{{ isSavingTranslatePreference() ? t('saving') : t('translateAction') }}
-				</button>
 			</section>
 		</div>
 	</div>

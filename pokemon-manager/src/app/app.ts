@@ -39,4 +39,8 @@ export class App {
   isDecks(): boolean {
     return this.router.url === '/decks';
   }
+
+  isSettings(): boolean {
+    return this.router.url === '/settings';
+  }
 }
