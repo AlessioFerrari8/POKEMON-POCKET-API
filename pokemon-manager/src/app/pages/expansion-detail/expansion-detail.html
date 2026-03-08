@@ -1,4 +1,4 @@
-<div>
+<div class="overflow-hidden min-h-screen flex flex-col -mt-21">
   <!-- dettagli carta -->
   @if(selectedCard()) {
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
@@ -17,20 +17,20 @@
   }
   
   @if(!selectedExpansion()) {
-    <div class="flex justify-center mt-4 mr-4 ml-4 mb-4">
-      <div class="grid grid-cols-3 gap-6 lg:grid-cols-4">
+    <div class="flex justify-center pt-25 mr-4 ml-4 mb-4">
+      <div class="grid grid-cols-3 gap-2 sm:gap-6 lg:grid-cols-4">
         @for(expansion of expansionSets; track expansion.id) {
           <div
-            class="abosulute z-10 p-6 bg-white rounded-xl shadow-lg border border-gray-200 cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all"
+            class="abosulute z-10 p-2 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-200 cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all"
             (click)="ExpansionClick(expansion.id)"
           >
-            <h3 class="text-xl font-semibold text-gray-900">{{ expansion.name }}</h3>
-            <p class="text-gray-500">{{ expansion.id }}</p>
+            <h3 class="text-xs sm:text-xl font-semibold text-gray-900 leading-tight">{{ expansion.name }}</h3>
+            <p class="text-gray-500 text-xs sm:text-base">{{ expansion.id }}</p>
           </div>
         }
       </div>
     </div>
-    <div id="collage" class="relative w-full flex-grow flex items-center justify-center mt-64 ">
+    <div id="collage" class="relative w-full flex-1 flex items-center justify-center">
       <div class="absolute z-0 transform translate-y-24 -translate-x-214 -rotate-30 scale-160">
         <img src="/collage/mythicalIsland.webp" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-50">
       </div>
@@ -73,7 +73,7 @@
     </div>
   
   } @else {
-    <div class="mt-8 mx-4 flex flex-col items-center">
+    <div class="pt-25 mx-4 flex flex-col items-center">
       <button type="button" (click)="selectedExpansion.set(null)" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
         Get Back
       </button>
