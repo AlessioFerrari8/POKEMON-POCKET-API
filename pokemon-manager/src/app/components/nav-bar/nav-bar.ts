@@ -22,4 +22,9 @@ export class NavBar {
   getImage(): string {
     return this.usersService.userData()?.photoURL ?? 'person.png';
   }
+
+  closeMenu(): void {
+    const menu = document.getElementById('mobile-menu') as HTMLElement & { hidden: boolean };
+    if (menu) menu.hidden = true;
+  }
 }

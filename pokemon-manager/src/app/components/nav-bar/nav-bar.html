@@ -1,4 +1,4 @@
-<nav class="absolute z-20 mt-4 mx-2 sm:mx-4 md:mx-12 lg:mx-20 xl:mx-28 2xl:mx-36 rounded-3xl relative bg-gray-800/50 shadow-xl backdrop-blur-sm border border-white/10">  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+<nav class="absolute z-50 mt-4 mx-2 sm:mx-4 md:mx-12 lg:mx-20 xl:mx-28 2xl:mx-36 rounded-3xl relative bg-gray-800/50 shadow-xl backdrop-blur-sm border border-white/10">  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
         <!-- Mobile menu button-->
@@ -51,11 +51,11 @@
 
   <el-disclosure id="mobile-menu" hidden class="absolute left-0 right-0 top-full mt-2 mx-4 rounded-2xl bg-gray-800/95 backdrop-blur-sm border border-white/10 shadow-xl lg:hidden">
     <div class="space-y-1 px-4 py-3">
-      <a routerLink="/home" routerLinkActive="bg-gray-950/50" [routerLinkActiveOptions]="{exact: true}" class="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-white/5">Home</a>
-      <a routerLink="/cards" routerLinkActive="bg-gray-950/50" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Cards</a>
-      <a routerLink="/decks" routerLinkActive="bg-gray-950/50" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Decks</a>
-      <a routerLink="/missing-cards" routerLinkActive="bg-gray-950/50" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Missing Cards</a>
-      <a routerLink="/expansion/1" routerLinkActive="bg-gray-950/50" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Expansion details</a>
+      <a routerLink="/home" routerLinkActive="bg-gray-950/50" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-white/5">Home</a>
+      <a routerLink="/cards" routerLinkActive="bg-gray-950/50" (click)="closeMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Cards</a>
+      <a routerLink="/decks" routerLinkActive="bg-gray-950/50" (click)="closeMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Decks</a>
+      <a routerLink="/missing-cards" routerLinkActive="bg-gray-950/50" (click)="closeMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Missing Cards</a>
+      <a routerLink="/expansion/1" routerLinkActive="bg-gray-950/50" (click)="closeMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Expansion details</a>
     </div>
   </el-disclosure>
 </nav>
