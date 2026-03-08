@@ -93,7 +93,7 @@ export class UsersService {
           this.router.navigateByUrl('/home');
         }
       } else {
-        console.log('ℹNessun utente loggato');
+        console.log('Nessun utente loggato');
         this._userData.set(null);
         this._isLogged.set(false);
       }
