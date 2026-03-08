@@ -4,7 +4,7 @@
   <!-- Modal per i dettagli della carta -->
   @if(selectedCard()) {
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" (click)="closeCardDetail()">
-      <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto" (click)="$event.stopPropagation()">
+      <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold text-gray-900">{{ selectedCard()!.name }}</h2>
           <button (click)="closeCardDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
@@ -30,46 +30,46 @@
       <div 
         (mouseenter)="onCardHover(1)"
         [class.z-50]="selectedCardIndex() === 1"
-        class="absolute z-20 transform -rotate-12 -translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300">
+        class="absolute z-20 transform -rotate-12 -translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300 hidden lg:block">
         <img src="/cards_poster/charizard.png" alt="Pokemon Card" class="w-60 rounded-lg shadow-xl">
       </div>
       <div 
         (mouseenter)="onCardHover(2)"
         [class.z-50]="selectedCardIndex() === 2"
-        class="absolute z-20 transform rotate-12 translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300">
+        class="absolute z-20 transform rotate-12 translate-x-48 hover:z-40 hover:scale-110 transition-all duration-300 hidden lg:block">
         <img src="/cards_poster/haunter.jpg" alt="Pokemon Card" class="w-60 rounded-lg shadow-xl">
       </div>
       <div 
         (mouseenter)="onCardHover(3)"
         [class.z-50]="selectedCardIndex() === 3"
-        class="absolute z-10 transform -rotate-20 -translate-x-80 hover:z-40 hover:scale-130 transition-all duration-300">
+        class="absolute z-10 transform -rotate-20 -translate-x-80 hover:z-40 hover:scale-130 transition-all duration-300 hidden lg:block">
         <img src="/cards_poster/pikachu.jpg" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-95 hover:opacity-100">
       </div>
       <div 
         (mouseenter)="onCardHover(4)"
         [class.z-50]="selectedCardIndex() === 4"
-        class="absolute z-10 transform rotate-20 translate-x-80 hover:z-40 hover:scale-125 transition-all duration-300">
+        class="absolute z-10 transform rotate-20 translate-x-80 hover:z-40 hover:scale-125 transition-all duration-300 hidden lg:block">
         <img src="/cards_poster/squirtle.webp" alt="Pokemon Card" class="w-56 rounded-lg shadow-lg opacity-95 hover:opacity-100">
       </div>
       <div 
         (mouseenter)="onCardHover(5)"
         [class.z-50]="selectedCardIndex() === 5"
-        class="absolute z-0 transform rotate-28 translate-x-112 hover:z-40 hover:scale-150 transition-all duration-300">
+        class="absolute z-0 transform rotate-28 translate-x-112 hover:z-40 hover:scale-150 transition-all duration-300 hidden lg:block">
         <img src="/cards_poster/ivysaur.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-90 hover:opacity-100">
       </div>
       <div 
         (mouseenter)="onCardHover(6)"
         [class.z-50]="selectedCardIndex() === 6"
-        class="absolute z-0 transform -rotate-28 -translate-x-112 hover:z-40 hover:scale-150 transition-all duration-300">
+        class="absolute z-0 transform -rotate-28 -translate-x-112 hover:z-40 hover:scale-150 transition-all duration-300 hidden lg:block">
         <img src="/cards_poster/blaziken.png" alt="Pokemon Card" class="w-52 rounded-lg shadow-md opacity-90 hover:opacity-100">
       </div>
-      <div class="absolute translate-x-180 translate-y-60">
+      <div class="absolute translate-x-180 translate-y-60 hidden lg:block">
         <img src="gengar.webp" alt="Pokemon Card">
       </div>
-      <div class="absolute -translate-x-180 translate-y-60">
+      <div class="absolute -translate-x-180 translate-y-60 hidden lg:block">
         <img src="lucario.webp" alt="Pokemon Card">
       </div>
-      <div class="absolute translate-y-90">
+      <div class="absolute translate-y-90 lg:block">
         <img src="greninja.webp" alt="Pokemon Card">
       </div>
     </div>
