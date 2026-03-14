@@ -40,8 +40,23 @@ export class UsersService {
   isInitialized: Signal<boolean> = this._isInitialized.asReadonly();
 
   constructor() {
+    // prima ripristino poi listener
+    const savedGuest = localStorage.getItem('guestUser');
+    if (savedGuest) {
+      try {
+        const guestData = JSON.parse(savedGuest);
+        this._userData.set(guestData);
+        this._isLogged.set(true);
+      } catch (error) {
+        console.error('Errore', error);
+        localStorage.removeItem('guestUser');
+      }
+    }
+
+
     // browserLocalPersistence è già il default per Firebase web, non serve setPersistence
     this.initAuthStateListener();
+
   }
 
   // TODO: use Observable instead of Promises
@@ -93,9 +108,11 @@ export class UsersService {
           this.router.navigateByUrl('/home');
         }
       } else {
-        console.log('Nessun utente loggato');
-        this._userData.set(null);
-        this._isLogged.set(false);
+        const savedUser = localStorage.getItem('guestUser')
+        if (!savedUser) {
+          this._userData.set(null)
+          this._isLogged.set(false);
+        }
       }
       this._isInitialized.set(true);
     });
@@ -170,6 +187,7 @@ export class UsersService {
     });
   }
 
+  // not used - AI generated
   async updateLanguage(language: AppLanguage): Promise<void> {
     const user = this._userData();
     if (!user) throw new Error('Utente non autenticato');
@@ -219,14 +237,19 @@ export class UsersService {
     return this._userData()?.missingCards?.some(c => c.id === cardId) ?? false;
   }
 
+  private persistGuestIfNeeded(): void {
+    const user = this._userData();
+    if (user?.uid.startsWith('guest')) {
+      localStorage.setItem('guestUser', JSON.stringify(user));
+    }
+  }
+
   async toggleMissingCard(card: IPokemon): Promise<void> {
     const user = this._userData();
     if (!user) return;
 
-    const userRef = doc(this.firestore, `users/${user.uid}`);
     const currentMissing: ILightPokemon[] = user.missingCards ?? [];
     const alreadyMissing = this.isCardMissing(card.id);
-
     let updatedMissing: ILightPokemon[];
 
     if (alreadyMissing) {
@@ -247,59 +270,59 @@ export class UsersService {
       };
       updatedMissing = [...currentMissing, lightCard];
     }
-
-    await updateDoc(userRef, { missingCards: updatedMissing });
     this._userData.set({ ...user, missingCards: updatedMissing });
+
+    if (!user.uid.startsWith('guest')) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
+      await updateDoc(userRef, { missingCards: updatedMissing });
+    }
+
+    this.persistGuestIfNeeded();
+
   }
 
   async toggleCardOwned(cardId: string): Promise<void> {
     const user = this._userData();
     if (!user) return;
 
-    const userRef = doc(this.firestore, `users/${user.uid}`);
     const owned = this.isCardOwned(cardId);
+    const updatedOwned = owned
+      ? (user.ownedCards ?? []).filter(id => id !== cardId)
+      : [...(user.ownedCards ?? []), cardId];
+    const updatedCount = (user.cardsOwnedCount ?? 0) + (owned ? -1 : 1);
 
-    if (owned) {
-      // rimuovi carta e decrementa contatore
+    this._userData.set({ ...user, ownedCards: updatedOwned, cardsOwnedCount: updatedCount });
+
+    if (!user.uid.startsWith('guest')) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
       await updateDoc(userRef, {
-        ownedCards: arrayRemove(cardId),
-        cardsOwnedCount: increment(-1)
-      });
-      this._userData.set({
-        ...user,
-        ownedCards: (user.ownedCards ?? []).filter(id => id !== cardId),
-        cardsOwnedCount: (user.cardsOwnedCount ?? 1) - 1
-      });
-    } else {
-      // aggiungi carta e incrementa contatore
-      await updateDoc(userRef, {
-        ownedCards: arrayUnion(cardId),
-        cardsOwnedCount: increment(1)
-      });
-      this._userData.set({
-        ...user,
-        ownedCards: [...(user.ownedCards ?? []), cardId],
-        cardsOwnedCount: (user.cardsOwnedCount ?? 0) + 1
+        ownedCards: owned ? arrayRemove(cardId) : arrayUnion(cardId),
+        cardsOwnedCount: increment(owned ? -1 : 1)
       });
     }
+
+    this.persistGuestIfNeeded();
   }
 
   async deleteDeck(deckId: string): Promise<void> {
     const user = this._userData();
     if (!user) return;
 
-    const userRef = doc(this.firestore, `users/${user.uid}`);
     const updatedDecks = (user.decks ?? []).filter(d => d.id !== deckId);
-
-    await updateDoc(userRef, { decks: updatedDecks });
     this._userData.set({ ...user, decks: updatedDecks });
+
+    if (!user.uid.startsWith('guest')) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
+      await updateDoc(userRef, { decks: updatedDecks });
+    }
+
+    this.persistGuestIfNeeded();
   }
+
 
   async saveDeck(name: string, cards: IPokemon[]): Promise<void> {
     const user = this._userData();
     if (!user) throw new Error('Utente non autenticato');
-
-    const userRef = doc(this.firestore, `users/${user.uid}`);
 
     const lightCards: ILightPokemon[] = cards
       .filter(c => c !== null)
@@ -340,8 +363,56 @@ export class UsersService {
       updatedDecks = [...existingDecks, newDeck];
     }
 
-    await updateDoc(userRef, { decks: updatedDecks });
     this._userData.set({ ...user, decks: updatedDecks });
+
+    if (!user.uid.startsWith('guest')) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
+      await updateDoc(userRef, { decks: updatedDecks });
+    }
+
+    this.persistGuestIfNeeded();
+
+  }
+
+  loginAsAGuest(): void { // no salvataggio su firestore
+    this._isLoading.set(true);
+    this._loginError.set('');
+    console.log('👤 Inizio del login come guest...');
+
+    try {
+    const guestUid = `guest_${crypto.randomUUID()}`;
+    const guestUser: IUser = {
+      uid: guestUid,
+      email: null,
+      displayName: 'Guest',
+      photoURL: null,
+      emailVerified: false,
+      cardsOwnedCount: 0,
+      ownedCards: [],
+      missingCards: [],
+      decks: [],
+      settings: {
+        language: 'it',
+        useGoogleTranslate: false
+      }
+    };
+
+      this._userData.set(guestUser);
+      this._isLogged.set(true);
+      this._isLoading.set(false);
+      
+      // uso localstorage per salvare
+      localStorage.setItem('guestUser', JSON.stringify(guestUser));
+      
+      console.log('✅ Login guest completato');
+      this.router.navigateByUrl('/home');
+    } catch (error) {
+      console.error('❌ Errore login guest:', error);
+      this._loginError.set('Errore durante il login come guest');
+      this._isLoading.set(false);
+      this._isInitialized.set(true);
+    }
+    
   }
 
   loginWithGoogle(): void {
@@ -357,6 +428,11 @@ export class UsersService {
       .then((result) => {
         console.log('✅ Login completato per:', result.user.email);
         this.setUserData(result.user);
+        localStorage.setItem('lastUser', JSON.stringify({ // salvo l'ultimo user
+          uid: result.user.uid,
+          email: result.user.email,
+          displayName: result.user.displayName
+        }));
         this._isLoading.set(false);
       })
       .catch((error) => {
@@ -369,6 +445,10 @@ export class UsersService {
 
   logout(): void {
     this._isLoading.set(true);
+
+    // pulizia guest
+    localStorage.removeItem('guestUser');
+    localStorage.removeItem('lastUser');
     
     signOut(this.auth)
       .then(() => {
