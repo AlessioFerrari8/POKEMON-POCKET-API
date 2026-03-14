@@ -18,4 +18,8 @@ export class Login {
   loginWithGoogle(): void {
     this.usersService.loginWithGoogle();
   }
+
+  loginAsGuest(): void {
+    this.usersService.loginAsAGuest();
+  }
 }
