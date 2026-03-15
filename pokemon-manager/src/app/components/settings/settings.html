@@ -42,6 +42,30 @@
 					</button>
 				</div>
 			</section>
+			<section class="rounded-xl border border-slate-700 bg-slate-900/40 p-5">
+				<label for="nickname" class="block text-sm font-semibold text-slate-100">Pokémon pocket id</label>
+				<p class="mt-1 text-xs text-slate-400">You can find your id on your pokémon pocket profile</p>
+
+				<div class="mt-4 flex flex-col gap-3 sm:flex-row">
+					<input
+						id="pokémonId"
+						name="pokémonId"
+						type="text"
+						[(ngModel)]="pokemonId"
+						maxlength="24"
+						class="w-full rounded-lg border border-slate-600 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none"
+					>
+
+					<button
+						type="button"
+						(click)="saveId()"
+						[disabled]="isSavingId()"
+						class="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+					>
+						{{ isSavingId() ? 'Saving...' : 'Save ID' }}
+					</button>
+				</div>
+			</section>
 		</div>
 	</div>
 </section>

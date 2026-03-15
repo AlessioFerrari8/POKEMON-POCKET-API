@@ -20,6 +20,9 @@
         <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ displayName() }}</h1>
         <p class="text-sm text-gray-600 font-medium">{{ email() }}</p>
         <p class="text-sm text-gray-600 font-medium">Your id: {{ id() }}</p>
+        @if(pid()) {
+          <p class="text-sm text-gray-600 font-medium">Your pokémon pocket id: {{ pid() }}</p>
+        }
       </div>
     </div>
 

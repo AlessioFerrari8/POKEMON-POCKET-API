@@ -187,6 +187,26 @@ export class UsersService {
     });
   }
 
+  async updatePokemonId(newPokemonId: string): Promise<void> {
+    const user = this._userData();
+    if (!user) throw new Error('Utente non autenticato');
+
+    const normalized = newPokemonId.trim();
+    if (normalized.length != 19) {
+      throw new Error('Pokemon ID deve contenere 19 caratteri');
+    }
+
+    const userRef = doc(this.firestore, `users/${user.uid}`);
+    await updateDoc(userRef, {
+      pid: normalized
+    });
+
+    this._userData.set({
+      ...user,
+      pid: normalized
+    });
+  }
+
   // not used - AI generated
   async updateLanguage(language: AppLanguage): Promise<void> {
     const user = this._userData();

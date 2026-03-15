@@ -17,6 +17,7 @@ export class UserProfile {
   photoURL: Signal<string | null | undefined> = computed(() => this.usersService.userData()?.photoURL);
   email: Signal<string | null | undefined> = computed(() => this.usersService.userData()?.email);
   id: Signal<string | null | undefined> = computed(() => this.usersService.userData()?.uid);
+  pid: Signal<string | null | undefined> = computed(() => this.usersService.userData()?.pid);
 
   cardsOwned: Signal<number> = computed(() => this.usersService.userData()?.cardsOwnedCount ?? 0);
   decksCount: Signal<number> = computed(() => this.usersService.userData()?.decks?.length ?? 0);
@@ -33,5 +34,7 @@ export class UserProfile {
   toMissing(): void {
     this.router.navigateByUrl('/missing-cards');
   }
+
+
 }
 

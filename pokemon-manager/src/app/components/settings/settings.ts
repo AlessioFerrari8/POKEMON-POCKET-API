@@ -15,8 +15,10 @@ export class Settings {
   private initializedFromUser = false;
 
   nickname = '';
+  pokemonId = '';
 
   isSavingNickname = signal(false);
+  isSavingId = signal(false);
 
   successMessage = signal('');
   errorMessage = signal('');
@@ -28,6 +30,7 @@ export class Settings {
 
       this.nickname = userData.nickname ?? userData.displayName ?? '';
       this.initializedFromUser = true;
+      this.pokemonId = userData.pid ?? '';
     });
   }
 
@@ -47,6 +50,25 @@ export class Settings {
       }
     } finally {
       this.isSavingNickname.set(false);
+    }
+  }
+
+  async saveId(): Promise<void> {
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.isSavingId.set(true);
+
+    try {
+      await this.usersService.updatePokemonId(this.pokemonId);
+      this.successMessage.set('Pokémon ID updated successfully.');
+    } catch (error) {
+      if (error instanceof Error && error.message) {
+        this.errorMessage.set(error.message);
+      } else {
+        this.errorMessage.set('Operation not valid. Retry');
+      }
+    } finally {
+      this.isSavingId.set(false);
     }
   }
 

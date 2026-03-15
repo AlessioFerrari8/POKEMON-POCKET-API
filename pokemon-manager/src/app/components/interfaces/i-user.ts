@@ -10,6 +10,7 @@ export interface IUserSettings {
 
 export interface IUser {
   uid: string;
+  pid?: string;
   email: string | null;
   displayName: string | null;
   nickname?: string | null;
