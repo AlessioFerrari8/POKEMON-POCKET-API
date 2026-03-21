@@ -147,3 +147,6 @@ pokemon-manager/
 ```
 
 ---
+
+
+TODO: non più di 2 stessi pokemon nel deck (banalmente controllo x nome)
