@@ -1,6 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, HttpClient } from '@angular/common/http';
+import { provideHttpClient, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptor } from './core/interceptors/error-interceptor';
 import { initializeApp } from '@angular/fire/app';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -25,13 +26,13 @@ const loadConfigAndInitFirebase = (http: HttpClient) => () => {
     .then(config => {
       if (config && config.firebase) {
         environment.firebase = config.firebase;
-        console.log('✅ Firebase config loaded from config.json');
+        console.log('Firebase config loaded from config.json');
       } else {
         console.warn('Firebase config not found in config.json, using environment defaults');
       }
     })
     .catch(err => {
-      console.error('❌ Errore nel caricamento di config.json, usando valori di ambiente:', err);
+      console.error('Errore nel caricamento di config.json, usando valori di ambiente:', err);
     });
 };
 
@@ -40,6 +41,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    },
     {
       provide: ErrorHandler,
       useClass: CorsErrorHandler
