@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';  
-import { UsersService } from '../../services/users-service';
+import { UsersService } from '../../../core/services/users-service';
 
 
 @Component({

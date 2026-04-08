@@ -1,5 +1,5 @@
 import { Component, inject, computed, Signal } from '@angular/core';
-import { UsersService } from '../../services/users-service';
+import { UsersService } from '../../../core/services/users-service';
 import { Router } from '@angular/router';
 
 @Component({

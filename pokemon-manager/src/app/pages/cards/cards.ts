@@ -1,11 +1,11 @@
 import { Component, signal, viewChild, WritableSignal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SearchBar } from '../../components/search-bar/search-bar';
-import { CardGridComponent } from '../../components/card-grid/card-grid';
-import { CardItemComponent } from '../../components/card-item/card-item';
-import { IPokemon } from '../../components/interfaces/i-pokemon';
+import { SearchBar } from '../../shared/components/search-bar/search-bar';
+import { CardGridComponent } from '../../shared/components/card-grid/card-grid';
+import { CardItemComponent } from '../../shared/components/card-item/card-item';
+import { IPokemon } from '../../shared/components/interfaces/i-pokemon';
 import { computed } from '@angular/core';
-import { PokemonSDK } from '../../services/pokemon-sdk';
+import { PokemonSDK } from '../../core/services/pokemon-sdk';
 
 @Component({
   selector: 'app-cards',

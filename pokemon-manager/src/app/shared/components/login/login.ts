@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../services/users-service';
+import { UsersService } from '../../../core/services/users-service';
 
 @Component({
   selector: 'app-login',

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PokemonSDK } from '../../services/pokemon-sdk';
-import { UsersService } from '../../services/users-service';
+import { PokemonSDK } from '../../core/services/pokemon-sdk';
+import { UsersService } from '../../core/services/users-service';
 
-import { IPokemon } from '../../components/interfaces/i-pokemon';
-import { ILightPokemon } from '../../components/interfaces/i-light-pokemon';
-import { CardGridComponent } from '../../components/card-grid/card-grid';
-import { CardItemComponent } from '../../components/card-item/card-item';
+import { IPokemon } from '../../shared/components/interfaces/i-pokemon';
+import { ILightPokemon } from '../../shared/components/interfaces/i-light-pokemon';
+import { CardGridComponent } from '../../shared/components/card-grid/card-grid';
+import { CardItemComponent } from '../../shared/components/card-item/card-item';
 
 @Component({
   selector: 'app-missing-cards',

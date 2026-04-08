@@ -9,10 +9,12 @@ import {
   User
 } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from '@angular/fire/firestore';
-import { AppLanguage, IUser } from '../components/interfaces/i-user';
-import { IPokemon } from '../components/interfaces/i-pokemon';
-import { ILightPokemon } from '../components/interfaces/i-light-pokemon';
-import { IDeck } from '../components/interfaces/i-deck';
+import { AppLanguage, IUser } from '../../shared/components/interfaces/i-user';
+import { IPokemon } from '../../shared/components/interfaces/i-pokemon';
+import { ILightPokemon } from '../../shared/components/interfaces/i-light-pokemon';
+import { IDeck } from '../../shared/components/interfaces/i-deck';
+import { StorageService } from './storage-service';
+import { STORAGE_KEYS, ROUTES, DEFAULTS, ERROR_MESSAGES } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +24,7 @@ export class UsersService {
   private auth = inject(Auth);
   private router = inject(Router);
   private firestore = inject(Firestore);
+  private storage = inject(StorageService);
 
   // variables for managin user
   private _userData: WritableSignal<IUser | null> = signal<IUser | null>(null);
@@ -41,15 +44,14 @@ export class UsersService {
 
   constructor() {
     // prima ripristino poi listener
-    const savedGuest = localStorage.getItem('guestUser');
+    const savedGuest = this.storage.getItem<IUser>(STORAGE_KEYS.GUEST_USER);
     if (savedGuest) {
       try {
-        const guestData = JSON.parse(savedGuest);
-        this._userData.set(guestData);
+        this._userData.set(savedGuest);
         this._isLogged.set(true);
       } catch (error) {
         console.error('Errore', error);
-        localStorage.removeItem('guestUser');
+        this.storage.removeItem(STORAGE_KEYS.GUEST_USER);
       }
     }
 
@@ -104,11 +106,11 @@ export class UsersService {
         await this.fetchAndSetUserData(user);
         console.log('Utente loggato:', user.email);
         // Se siamo sulla pagina di login e c'è un utente, naviga a home
-        if (this.router.url === '/login') {
-          this.router.navigateByUrl('/home');
+        if (this.router.url === `/${ROUTES.LOGIN}`) {
+          this.router.navigateByUrl(`/${ROUTES.HOME}`);
         }
       } else {
-        const savedUser = localStorage.getItem('guestUser')
+        const savedUser = this.storage.getItem(STORAGE_KEYS.GUEST_USER)
         if (!savedUser) {
           this._userData.set(null)
           this._isLogged.set(false);
@@ -167,11 +169,11 @@ export class UsersService {
 
   async updateNickname(newNickname: string): Promise<void> {
     const user = this._userData();
-    if (!user) throw new Error('Utente non autenticato');
+    if (!user) throw new Error(ERROR_MESSAGES.USER_NOT_AUTHENTICATED);
 
     const normalized = newNickname.trim();
-    if (normalized.length < 2 || normalized.length > 24) {
-      throw new Error('Il nickname deve contenere da 2 a 24 caratteri');
+    if (normalized.length < DEFAULTS.NICKNAME_MIN_LENGTH || normalized.length > DEFAULTS.NICKNAME_MAX_LENGTH) {
+      throw new Error(ERROR_MESSAGES.INVALID_NICKNAME);
     }
 
     const userRef = doc(this.firestore, `users/${user.uid}`);
@@ -189,11 +191,11 @@ export class UsersService {
 
   async updatePokemonId(newPokemonId: string): Promise<void> {
     const user = this._userData();
-    if (!user) throw new Error('Utente non autenticato');
+    if (!user) throw new Error(ERROR_MESSAGES.USER_NOT_AUTHENTICATED);
 
     const normalized = newPokemonId.trim();
-    if (normalized.length != 19) {
-      throw new Error('Pokemon ID deve contenere 19 caratteri');
+    if (normalized.length != DEFAULTS.POKEMON_ID_LENGTH) {
+      throw new Error(ERROR_MESSAGES.INVALID_POKEMON_ID);
     }
 
     const userRef = doc(this.firestore, `users/${user.uid}`);
@@ -210,7 +212,7 @@ export class UsersService {
   // not used - AI generated
   async updateLanguage(language: AppLanguage): Promise<void> {
     const user = this._userData();
-    if (!user) throw new Error('Utente non autenticato');
+    if (!user) throw new Error(ERROR_MESSAGES.USER_NOT_AUTHENTICATED);
 
     const normalizedLanguage: AppLanguage = language === 'en' ? 'en' : 'it';
     const updatedSettings = {
@@ -225,7 +227,7 @@ export class UsersService {
 
   async updateGoogleTranslatePreference(enabled: boolean): Promise<void> {
     const user = this._userData();
-    if (!user) throw new Error('Utente non autenticato');
+    if (!user) throw new Error(ERROR_MESSAGES.USER_NOT_AUTHENTICATED);
 
     const updatedSettings = {
       language: user.settings?.language ?? 'it',
@@ -260,7 +262,7 @@ export class UsersService {
   private persistGuestIfNeeded(): void {
     const user = this._userData();
     if (user?.uid.startsWith('guest')) {
-      localStorage.setItem('guestUser', JSON.stringify(user));
+      this.storage.setItem(STORAGE_KEYS.GUEST_USER, user);
     }
   }
 
@@ -342,7 +344,7 @@ export class UsersService {
 
   async saveDeck(name: string, cards: IPokemon[]): Promise<void> {
     const user = this._userData();
-    if (!user) throw new Error('Utente non autenticato');
+    if (!user) throw new Error(ERROR_MESSAGES.USER_NOT_AUTHENTICATED);
 
     const lightCards: ILightPokemon[] = cards
       .filter(c => c !== null)
@@ -422,13 +424,13 @@ export class UsersService {
       this._isLoading.set(false);
       
       // uso localstorage per salvare
-      localStorage.setItem('guestUser', JSON.stringify(guestUser));
+      this.storage.setItem(STORAGE_KEYS.GUEST_USER, guestUser);
       
       console.log('✅ Login guest completato');
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl(`/${ROUTES.HOME}`);
     } catch (error) {
       console.error('❌ Errore login guest:', error);
-      this._loginError.set('Errore durante il login come guest');
+      this._loginError.set(ERROR_MESSAGES.GUEST_LOGIN_ERROR);
       this._isLoading.set(false);
       this._isInitialized.set(true);
     }
@@ -448,16 +450,16 @@ export class UsersService {
       .then((result) => {
         console.log('✅ Login completato per:', result.user.email);
         this.setUserData(result.user);
-        localStorage.setItem('lastUser', JSON.stringify({ // salvo l'ultimo user
+        this.storage.setItem(STORAGE_KEYS.LAST_USER, { // salvo l'ultimo user
           uid: result.user.uid,
           email: result.user.email,
           displayName: result.user.displayName
-        }));
+        });
         this._isLoading.set(false);
       })
       .catch((error) => {
         console.error('❌ Errore di login:', error);
-        this._loginError.set(error.message || 'Errore durante il login. Assicurati che i domini autorizzati siano configurati in Firebase.');
+        this._loginError.set(error.message || ERROR_MESSAGES.LOGIN_ERROR);
         this._isLoading.set(false);
         this._isInitialized.set(true);
       });
@@ -467,19 +469,19 @@ export class UsersService {
     this._isLoading.set(true);
 
     // pulizia guest
-    localStorage.removeItem('guestUser');
-    localStorage.removeItem('lastUser');
+    this.storage.removeItem(STORAGE_KEYS.GUEST_USER);
+    this.storage.removeItem(STORAGE_KEYS.LAST_USER);
     
     signOut(this.auth)
       .then(() => {
         this._isLogged.set(false);
         this._userData.set(null);
         this._loginError.set('');
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl(`/${ROUTES.LOGIN}`);
       })
       .catch((error) => {
         console.error('Errore di logout:', error);
-        this._loginError.set(error.message || 'Errore durante il logout');
+        this._loginError.set(error.message || ERROR_MESSAGES.LOGOUT_ERROR);
       })
       .finally(() => {
         this._isLoading.set(false);

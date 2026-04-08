@@ -1,6 +1,6 @@
 import { Component, inject, signal, WritableSignal, Output, EventEmitter } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PokemonSDK } from '../../services/pokemon-sdk';
+import { PokemonSDK } from '../../../core/services/pokemon-sdk';
 import { IPokemon } from '../interfaces/i-pokemon';
 
 @Component({

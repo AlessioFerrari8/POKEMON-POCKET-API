@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IPokemon } from '../interfaces/i-pokemon';
-import { UsersService } from '../../services/users-service';
+import { UsersService } from '../../../core/services/users-service';
 import { Router } from '@angular/router';
 
 @Component({

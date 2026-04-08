@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ScrollAnimateDirective } from '../../directives/scroll-animate.directive';
+import { ScrollAnimateDirective } from '../../shared/directives/scroll-animate.directive';
 
 @Component({
   selector: 'app-home',

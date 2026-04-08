@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import TCGdex, { Query } from '@tcgdex/sdk';
 import { from, map, Observable, shareReplay, catchError, of, tap } from 'rxjs';
-import { IPokemon } from '../components/interfaces/i-pokemon';
+import { IPokemon } from '../../shared/components/interfaces/i-pokemon';
+import { API_ENDPOINTS, DEFAULTS } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -16,31 +17,29 @@ export class PokemonSDK {
   }
 
   searchCards(name: string): Observable<IPokemon[]> {
-    // https://api.tcgdex.net/v2/en/cards?name=pikachu
-    const url = `https://api.tcgdex.net/v2/en/cards?name=${name}`;
+    const url = API_ENDPOINTS.TCG_CARDS_SEARCH(name);
     return this.http.get<IPokemon[]>(url).pipe(
-      map(cards => cards.filter(card => card.image && card.image.includes('/tcgp/'))),
+      map(cards => cards.filter(card => card.image && card.image.includes(DEFAULTS.CARD_IMAGE_FILTER))),
       catchError(() => of([]))
     );
   }
 
-  getCards(series: string = 'tcgp'): Observable<IPokemon[]> {
-    const url = `https://api.tcgdex.net/v2/en/series/${series}/cards`;
+  getCards(series: string = DEFAULTS.SERIES): Observable<IPokemon[]> {
+    const url = API_ENDPOINTS.TCG_SERIES_CARDS(series);
     return this.http.get<IPokemon[]>(url).pipe(
       catchError(() => of([]))
     );
   }
 
   getSet(setId: string): Observable<any> {
-    // https://api.tcgdex.net/v2/en/sets/A1
-    const url = `https://api.tcgdex.net/v2/en/sets/${setId}`;
+    const url = API_ENDPOINTS.TCG_SET(setId);
     return this.http.get<any>(url).pipe(
       catchError(() => of(null))
     );
   }
 
   getMissingCard(setId: string, name: string): Observable<IPokemon[]> {
-    const url = `https://api.tcgdex.net/v2/en/sets/${setId}/${name}`;
+    const url = API_ENDPOINTS.TCG_CARD_IN_SET(setId, name);
     return this.http.get<IPokemon[]>(url).pipe(
       catchError(() => of([]))
     );
@@ -50,7 +49,7 @@ export class PokemonSDK {
     const parts = imageUrl.split('/');
     const setId = parts[parts.length - 2]; // Estrae il set ID (penultima parte del path)
     const cardId = parts[parts.length - 1]; // Estrae l'ID della carta (ultima parte del path)
-    const url = `https://api.tcgdex.net/v2/en/sets/${setId}/${cardId}`;
+    const url = API_ENDPOINTS.TCG_CARD_IN_SET(setId, cardId);
     return this.http.get<any>(url).pipe(
       catchError(() => of())
     );

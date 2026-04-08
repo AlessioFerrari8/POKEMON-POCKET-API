@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PokemonSDK } from '../../services/pokemon-sdk';
-import { IPokemon } from '../../components/interfaces/i-pokemon';
-import { ILightPokemon } from '../../components/interfaces/i-light-pokemon';
-import { IDeck } from '../../components/interfaces/i-deck';
-import { SearchBar } from '../../components/search-bar/search-bar';
-import { CardGridComponent } from '../../components/card-grid/card-grid';
-import { UsersService } from '../../services/users-service';
+import { PokemonSDK } from '../../core/services/pokemon-sdk';
+import { IPokemon } from '../../shared/components/interfaces/i-pokemon';
+import { ILightPokemon } from '../../shared/components/interfaces/i-light-pokemon';
+import { IDeck } from '../../shared/components/interfaces/i-deck';
+import { SearchBar } from '../../shared/components/search-bar/search-bar';
+import { CardGridComponent } from '../../shared/components/card-grid/card-grid';
+import { UsersService } from '../../core/services/users-service';
 
 @Component({
   selector: 'app-decks',
