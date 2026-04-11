@@ -19,7 +19,21 @@ export class PokemonSDK {
   searchCards(name: string): Observable<IPokemon[]> {
     const url = API_ENDPOINTS.TCG_CARDS_SEARCH(name);
     return this.http.get<IPokemon[]>(url).pipe(
-      map(cards => cards.filter(card => card.image && card.image.includes(DEFAULTS.CARD_IMAGE_FILTER))),
+      map(cards => {
+        return cards
+          .filter(card => card.image && card.image.includes(DEFAULTS.CARD_IMAGE_FILTER))
+          .map(card => {
+            // Estrae il setId dall'URL della carta
+            const parts = card.image.split('/');
+            const setId = parts[parts.length - 2];
+            console.log('Card image URL:', card.image);
+            console.log('Extracted setId:', setId);
+            return {
+              ...card,
+              set: card.set || { id: setId, name: '', logo: '', symbol: '', cardCount: { official: 0, total: 0 } }
+            };
+          });
+      }),
       catchError(() => of([]))
     );
   }
@@ -51,6 +65,12 @@ export class PokemonSDK {
     const cardId = parts[parts.length - 1]; // Estrae l'ID della carta (ultima parte del path)
     const url = API_ENDPOINTS.TCG_CARD_IN_SET(setId, cardId);
     return this.http.get<any>(url).pipe(
+      map(card => {
+        return {
+          ...card,
+          set: card.set || { id: setId, name: '', logo: '', symbol: '', cardCount: { official: 0, total: 0 } }
+        };
+      }),
       catchError(() => of())
     );
   }
