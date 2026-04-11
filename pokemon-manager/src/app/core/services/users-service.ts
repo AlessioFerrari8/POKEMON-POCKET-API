@@ -277,6 +277,13 @@ export class UsersService {
     if (alreadyMissing) {
       updatedMissing = currentMissing.filter(c => c.id !== card.id);
     } else {
+      // Estrae il setId dall'URL dell'immagine se non è già presente
+      let setId = card.set?.id || '';
+      if (!setId && card.image) {
+        const parts = card.image.split('/');
+        setId = parts[parts.length - 2] || '';
+      }
+
       const lightCard: ILightPokemon = {
         id: card.id,
         name: card.name ?? '',
@@ -285,6 +292,13 @@ export class UsersService {
         category: card.category ?? '',
         illustrator: card.illustrator ?? '',
         rarity: card.rarity ?? '',
+        set: {
+          id: setId,
+          name: card.set?.name || '',
+          logo: card.set?.logo || '',
+          symbol: card.set?.symbol || '',
+          cardCount: card.set?.cardCount || { official: 0, total: 0 }
+        },
         dexId: card.dexId ?? [],
         hp: card.hp ?? 0,
         types: card.types ?? [],
@@ -356,6 +370,7 @@ export class UsersService {
         category: c.category ?? '',
         illustrator: c.illustrator ?? '',
         rarity: c.rarity ?? '',
+        set: c.set ?? { id: '', name: '', logo: '', symbol: '', cardCount: { official: 0, total: 0 } },
         dexId: c.dexId ?? [],
         hp: c.hp ?? 0,
         types: c.types ?? [],
