@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ErrorInterceptor } from './core/interceptors/error-interceptor';
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
+import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { initializeApp } from '@angular/fire/app';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -40,12 +40,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true
-    },
+    provideHttpClient(withInterceptors([errorInterceptor])),
     {
       provide: ErrorHandler,
       useClass: CorsErrorHandler
