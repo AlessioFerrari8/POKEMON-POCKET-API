@@ -26,3 +26,25 @@ https://api.tcgdex.net/v2/en/sets/
 
 ###
 https://api.tcgdex.net/v2/en/
+###
+# Get cards from A1 to discover rarity values
+https://api.tcgdex.net/v2/en/sets/A1
+
+###
+# Get single card with rarity details
+https://api.tcgdex.net/v2/en/cards/A1-285
+###
+# Get single card with rarity details
+https://api.tcgdex.net/v2/en/cards/A1-227
+
+###
+# Try ex card - Venusaur ex
+https://api.tcgdex.net/v2/en/cards/B2a-98
+
+###
+# Try other rarities
+https://api.tcgdex.net/v2/en/cards?name=ex
+
+###
+# Try Crown rare or special cards
+https://api.tcgdex.net/v2/en/cards?name=Crown
